@@ -3,182 +3,140 @@
 ![ci_on_commit](https://github.com/ehmpathy/error-fns/workflows/ci_on_commit/badge.svg)
 ![deploy_on_tag](https://github.com/ehmpathy/error-fns/workflows/deploy_on_tag/badge.svg)
 
-Narrow your codepaths with generic types, type checks, and type guards for simpler, safer, and easier to read code.
+Standardized helpful errors and methods for simpler, safer, and easier to read code.
 
 # Purpose
 
-Narrow your codepaths for simpler, safer, and easier to read code.
-- simplify your code paths with type narrowing using type checks (e.g., `isPresent`, `isAPromise`, `isAFunction`, `isOfEnum`, etc)
-- declare your types more readably with powerful extended types (e.g., `PickOne`, `HasMetadata`, etc)
+Standardize on helpful errors for simpler, safer, easier to read code
+- extend the `HelpfulError` for observable and actionable error messages
+- leverage the `UnexpectedCodePath` to eliminate complexity with narrowed codepaths
+- leverage the `BadRequestError` to make it clear when your logic successfully rejected a request
+- test that logic throws errors ergonomically with `getError`
 
-This library is a collection of generic types, type guards, and type checks we've found the need to define over and over again across different domains, collected in one spot for reusability.
+This library is a collection of generic errors and methods that make your code easier to write, easier to read, easier to test, and easier to maintain.
 
-
-
-# Background
-
-Type guards are built from type checks, built on a type predicate.
-- type predicate: `value is 'blue'`
-- type check: `const isBlue(value: any): value is 'blue' = value === 'blue'`
-- type guard: `if (isBlue(color)) throw new Error('should be blue')`
-
-Type guards allow us to to inform typescript we've checked the type of a variable at runtime, enabling type narrowing.
-
-_For more information about typescripts type guards, type checks, and type predicates, [see this section in the typescript docs on "narrowing"](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates)_
-
-
-# Install
+# install
 
 ```sh
-npm install --save error-fns
+npm install --save @ehmpathy/error-fns
 ```
 
-# Examples
+# use
 
-## generic types
+### UnexpectedCodePathError
 
-### `PickOne`
+The `UnexpectedCodePath` error is probably the most common type of error you'll throw.
 
-The generic type `PickOne` allows you to specify that only one of the keys in the object can be defined, the others must be undefined.
+It's common in business logic that you'll face a scenario that is technically possible but logically shouldn't occur.
 
-This is very useful when working with an interface where you have exclusive settings. For example:
+For example, lets say you're writing on-vehicle code to check the tire pressures of a vehicle.
+
 ```ts
-import { PickOne } from 'error-fns';
+// given the tires to check
+const tires = Tire[];
 
-const findWrench = async ({
-  size,
-}: {
-  /**
-   * specify the size of the wrench in either `imperial` or `metric` units
-   *
-   * note
-   * - we "PickOne" because this is an exclusive option, a size cant be defined in both
-   */
-  size: PickOne<{
-    metric: {
-      millimeters: number,
-    }
-    imperial: {
-      inches: string,
-    }
-  }>
-}) => {
-  // ...
+// first get the tire pressures for each
+const tirePressures: number[] = tires.map(tire => getTirePressure(tire));
+
+// now get the lowest tire pressure
+const lowestTirePressure: number | undefined = tires.sort()[0];
+```
+
+In this case, its technically possible that `lowestTirePressure` could be undefined: there could not be any tires.
+
+However, this is definitely an unexpected code path for our application. We can just halt our logic if we reach here, since we dont need to solve for it.
+
+```ts
+// sanity check that we do have a tire pressure
+if (lowestTirePressure === undefined)
+  throw new UnexpectedCodePath('no tire pressures found. can not compute lowest tire pressure', { tires });
+```
+
+With this, the type of `lowestTirePressure` has been narrowed from `number | undefined` to just `number`, so you wont have any type errors anymore.
+
+Further, if this case does occur in real life, then it will be really easy to debug what happened and why. Your error message will include the `tires` input that caused the problem making this a breeze to debug. No more `could not read property 'x' of undefined`!
+
+### BadRequestError
+
+The `BadRequestError` is probably the next most common type of error you'll throw.
+
+It's common in business logic that callers will try to execute your logic with inputs that are simply logically not valid. The user may not understand that their input is not valid or there may just be a bug upstream that is resulting in invalid requests.
+
+For example, imagine you have an api that returns the liked songs of a user
+```ts
+const getLikedSongsByUser = ({ userUuid }: { userUuid: string }) => {
+  // lookup the user
+  const user = await userDao.findByUuid({ uuid: userUuid });
+
+  // if the user does not exist, this is an invalid request. we shouldn't be asked to lookup songs for fake users
+  if (!user)
+    throw new BadRequestError('user does not exist for uuid', { userUuid });
+
+  // use a property of the user to lookup their favorite songs
+  const songs = await spotifyApi.getLikesForUser({ spotifyUserId: user.spotifyUserId });
 }
+```
 
-// you can find by metric
-await findWrench({
-  size: {
-    metric: { millimeters: 16 }
+Whatever the reason for a caller making a logically invalid request, it's important to distinguish when *your code* is at fault versus when *the request* is at fault.
+
+This is particularly useful when monitoring error rates. Its important to distinguish whether your software `failed to execute` or whether it `successfully rejected` the request for observability in monitoring for issues. The `BadRequestError` enables us to do this easily
+
+For example, libraries such as the [simple-lambda-handlers](https://github.com/ehmpathy/simple-lambda-handlers) leverage `BadRequestErrors` to ensure that a bad request both successfully returns an error to the caller but is not marked as an lambda invocation error.
+
+### HelpfulError
+
+The `HelpfulError` is the backbone of this pattern and is what you'll `extend` whenever you want to create a custom error.
+
+The purpose of this error is to be as helpful as possible to whoever has to read it when its thrown.
+
+To fulfill this goal, the error makes it very easy to specify what the issue was as well as any other information that may be helpful to understanding why it occurred at the time. It then pretty prints this information to make it easy to read when observing.
+
+```ts
+throw new HelpfulError(
+  'the message of the error goes here',
+  {
+    context,
+    relevantInfo,
+    potentiallyHelpfulVariables,
+    goHere,
   }
-})
-
-// you can find by imperial
-await findWrench({
-  size: {
-    imperial: { inches: '5/16' }
-  }
-})
-
-// you can't find by both
-await findWrench({
-  size: {
-    metric: { millimeters: 16 } , // 🛑 typescript error: `Type '{ millimeters: number; }' is not assignable to type 'undefined'.ts(2322)`
-    imperial: { inches: '5/16' }
-  }
-})
+)
 ```
 
-### `DropFirst`
+### getError
 
-The generic type `DropFirst` lets you exclude the first element of an array.
+The `getError` method is the cherry-on-top of this library.
 
+When writing tests for logic that throws an error in certain situations, you may want to verify that the code indeed throws this error in a test.
+
+The `getError` utility makes it really easy to assert that the expected error is thrown.
+
+Under the hood, it executes or awaits the logic or promise you give it as input, catches the error that is throw, or throws a NoErrorThrownError of its own. It does the legwork of handling all three cases you may need to use it in and defining the return type correctly.
+
+usecase 1: synchronous logic
 ```ts
-type NumberStringString = [number, string, string];
-const numStrStr: NumberStringString = [1, '2', '3'];
-const strStr: DropFirst<NumberStringString> = ['1', '2'];
-const str: string = strStr[0];
-const num: number = numStrStr[0];
+const doSomething = () => { throw new HelpfulError('found me'); }
+
+const error = getError(() => doSomething())
+expect(error).toBeInstanceOf(HelpfulError);
+expect(error.message).toContain('found me')
 ```
 
-Useful, for example, if you want to change the first parameter of a function while keeping the rest the same.
-
-## type guards
-
-### `isPresent`
-
-The type predicate of `isPresent` any informs typescript that if a value passes this type check, the value is _not_ `null` or `undefined`:
-
-This is most useful for filtering, to inform typescript that we have removed all `null` or `undefined` values from an array. For example:
+usecase 2: asynchronous logic
 ```ts
-import { isPresent } from 'error-fns';
+const doSomething = async () => { throw new HelpfulError('found me'); }
 
-// you have an array that contains strings or nulls
-const stringsOrNulls = ['success:1', 'success:2', null, 'success:3', null]; // type = `(string | null)[]`
-
-// now you want to get rid of all the nulls and only think about the strings: use `isPresent`
-const strings = stringsOrNulls.filter(isPresent); // type = string[]
-
-// the type predicate on the `isPresent` function informs typescript that all of the nulls and undefineds have been removed
-strings.map((string) => string.toUpperCase()); // now you can operate on the strings without typescript complaining!
+const error = await getError(() => doSomething())
+expect(error).toBeInstanceOf(HelpfulError);
+expect(error.message).toContain('found me')
 ```
 
-### `isOfEnum`
-
-The type predicate of `isOfEnum` allows you to check whether a value is a valid member of an enum. For example:
+usecase 3: a promise
 ```ts
-import { createIsOfEnum } from 'error-fns';
+const doSomething = async () => { throw new HelpfulError('found me'); }
 
-// you have an enum
-enum Planet {
-  ...
-  VENUS = 'VENUS',
-  EARTH = 'EARTH',
-  MARS = 'MARS',
-  ...
-}
-
-// define a type check for your enum
-const isPlanet = createIsOfEnum(Planet);
-
-// use your new type check for a type guard
-if (!isPlanet(potentialPlanet)) throw new Error('is not a planet');
+const error = await getError(doSomething())
+expect(error).toBeInstanceOf(HelpfulError);
+expect(error.message).toContain('found me')
 ```
 
-### `isAPromise`
-
-The type predicate of `isAPromise` allows you to narrow down the type of any variable that may be a promise
-
-```ts
-import { isAPromise } from 'error-fns';
-
-// imagine we didn't know whether soonerOrLater is a promise or a string
-const soonerOrLater: Promise<string> | string = Promise.resolve('hello') as any;
-
-// typescript wont let you do things not common between the two types, rightly so
-soonerOrLater.toLowerCase(); //  🛑 typescript error: `Property 'toLowerCase' does not exist on type 'string | Promise<string>'.`
-
-// use the type-check to narrow down the the type to operate specifically per type
-if (isAPromise(soonerOrLater)) {
-  soonerOrLater.then((value) => value.toLowerCase()); // no error since type was narrowed to `Promise<string>`
-} else {
-  soonerOrLater.toLowerCase();  // no error since type was narrowed to `string`
-}
-```
-
-### `isAFunction`
-
-The type predicate of `isAFunction` allows you to narrow down the type of any variable that may be a function
-
-This is super helpful when writing apis that can take a literal or a function that creates the literal. For example
-```ts
-const superCoolApi = async ({
-  getConfig
-}: {
-  getConfig: Config | () => Promise<Config>  // this can be the `Config` object or a function which resolves the `Config` object
-}) => {
-  const config: Config = isAFunction(getConfig)
-    ? await getConfig() // if getConfig is a function, then execut it and await it to grab the config
-    : getConfig; // otherwise, it is the config object already
-}
-```
