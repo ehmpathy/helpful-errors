@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UnexpectedCodePathError should produce a helpful, observable error message 1`] = `
+[Error: UnexpectedCodePathError: no tires on the vehicle
+
+{"tires":[]}]
+`;
