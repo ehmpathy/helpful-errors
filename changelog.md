@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/ehmpathy/error-fns/compare/v1.0.1...v1.0.2) (2023-09-16)
+
+
+### Bug Fixes
+
+* **pkg:** expose exports via index ([edfaec8](https://github.com/ehmpathy/error-fns/commit/edfaec81b02115ef1520bd17a6d2e664f8e878fd))
+
 ## [1.0.1](https://github.com/ehmpathy/error-fns/compare/v1.0.0...v1.0.1) (2023-09-16)
 
 
