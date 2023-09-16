@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { isAFunction, isAPromise } from 'type-fns';
 
 export class NoErrorThrownError extends Error {}

@@ -11,7 +11,7 @@ describe('getError', () => {
     expect(error.message).toContain('found me');
   });
   it('can get error from asynchronous logic', async () => {
-    const doSomething: () => Promise<void> = () => {
+    const doSomething = async () => {
       throw new HelpfulError('found me');
     };
     const error = await getError(() => doSomething());
@@ -19,7 +19,7 @@ describe('getError', () => {
     expect(error.message).toContain('found me');
   });
   it('can get error from promise', async () => {
-    const doSomething: () => Promise<void> = () => {
+    const doSomething = async () => {
       throw new HelpfulError('found me');
     };
     const error = await getError(doSomething());
