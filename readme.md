@@ -13,8 +13,6 @@ Standardize on helpful errors for simpler, safer, easier to read code
 - leverage the `BadRequestError` to make it clear when your logic successfully rejected a request
 - test that logic throws errors ergonomically with `getError`
 
-This library is a collection of generic errors and methods that make your code easier to write, easier to read, easier to test, and easier to maintain.
-
 # install
 
 ```sh
