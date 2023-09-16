@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/ehmpathy/error-fns/compare/v1.0.0...v1.0.1) (2023-09-16)
+
+
+### Bug Fixes
+
+* **docs:** remove redundant readme statement ([3cb5249](https://github.com/ehmpathy/error-fns/commit/3cb52492f86e24dec386cc1cff1c9e73d0675c4b))
+
 ## 1.0.0 (2023-09-16)
 
 
