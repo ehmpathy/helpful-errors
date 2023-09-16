@@ -2,7 +2,7 @@
   "name": "@ehmpathy/error-fns",
   "author": "ehmpathy",
   "description": "A standard set of errors and methods for simpler, safer, and easier to read code.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": "ehmpathy/error-fns",
   "homepage": "https://github.com/ehmpathy/error-fns",
   "keywords": [
