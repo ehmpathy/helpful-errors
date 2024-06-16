@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/ehmpathy/error-fns/compare/v1.0.2...v1.1.0) (2024-06-16)
+
+
+### Features
+
+* **factory:** add static .throw factory to helpful errors for convinience ([3f82ef6](https://github.com/ehmpathy/error-fns/commit/3f82ef65c0a53d08b7cddf26b5fd6ef1f7079fba))
+
 ## [1.0.2](https://github.com/ehmpathy/error-fns/compare/v1.0.1...v1.0.2) (2023-09-16)
 
 
