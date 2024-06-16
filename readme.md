@@ -138,3 +138,24 @@ expect(error).toBeInstanceOf(HelpfulError);
 expect(error.message).toContain('found me')
 ```
 
+### .throw
+
+The errors extended from the `HelpfulError` include a `.throw` static method for convenient usage with ternaries or condition chains
+
+For example, instead of
+```ts
+const phone = customer.phoneNumber ?? (() => {
+  throw new UnexpectedCodePathError(
+    'customer has relationship without phone number. how is that possible?',
+    { customer },
+  );
+})();
+```
+
+You can simply write
+```ts
+const phone = customer.phoneNumber ?? UnexpectedCodePathError.throw(
+  'customer does not have a phone. how is that possible?',
+  { customer },
+);
+```
