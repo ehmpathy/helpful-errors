@@ -1,12 +1,21 @@
+import { omit } from 'type-fns';
+
+export type HelpfulErrorMetadata = Record<string, any> & { cause?: Error };
+
 /**
  * HelpfulError errors are used to add information that helps the future observer of the error understand whats going on
  */
 export class HelpfulError extends Error {
-  constructor(message: string, metadata?: Record<string, any>) {
+  constructor(message: string, metadata?: HelpfulErrorMetadata) {
+    const metadataWithoutCause = metadata
+      ? omit(metadata, ['cause'])
+      : metadata;
     const fullMessage = `${message}${
-      metadata ? `\n\n${JSON.stringify(metadata)}` : ''
+      metadataWithoutCause && Object.keys(metadataWithoutCause).length
+        ? `\n\n${JSON.stringify(metadataWithoutCause)}`
+        : ''
     }`;
-    super(fullMessage);
+    super(fullMessage, metadata?.cause ? { cause: metadata.cause } : undefined);
   }
 
   /**
@@ -20,7 +29,7 @@ export class HelpfulError extends Error {
   public static throw<T extends typeof HelpfulError>(
     this: T, // https://stackoverflow.com/a/51749145/3068233
     message: string,
-    metadata?: Record<string, any>,
+    metadata?: HelpfulErrorMetadata,
   ): never {
     // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw new this(message, metadata) as InstanceType<T>;

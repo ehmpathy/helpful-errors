@@ -27,4 +27,13 @@ describe('HelpfulError', () => {
     expect(error).toBeInstanceOf(HelpfulError);
     expect(error.message).toEqual('phone two not found!');
   });
+  it('should be possible to extend the call stack of an error via cause', () => {
+    const errorOriginal = new Error('some original error');
+    const errorHelpful = new HelpfulError('some helpful error', {
+      cause: errorOriginal,
+    });
+    expect(errorHelpful).toMatchSnapshot();
+    expect(errorHelpful.cause).toBeDefined();
+    expect(errorHelpful.cause).toMatchSnapshot();
+  });
 });

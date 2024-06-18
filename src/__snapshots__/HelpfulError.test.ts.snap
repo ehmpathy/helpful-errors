@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`HelpfulError should be possible to extend the call stack of an error via cause 1`] = `[Error: some helpful error]`;
+
+exports[`HelpfulError should be possible to extend the call stack of an error via cause 2`] = `[Error: some original error]`;
+
 exports[`HelpfulError should produce a helpful, observable error message 1`] = `
 [Error: the dogs were let out
 

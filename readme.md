@@ -159,3 +159,26 @@ const phone = customer.phoneNumber ?? UnexpectedCodePathError.throw(
   { customer },
 );
 ```
+
+### HelpfulError parameter options.cause
+
+The .cause parameter is a helpful feature of native errors. It allows you to chain errors together in a way that retains the full stack trace across errors.
+
+For example, sometimes, the original error that your code experiences can be reworded to make it easier to debug. By using the .cause option, you're able to retain the stack trace and reference of the original error while throwing a new, more helpful, error.
+
+```ts
+// imagine you're using some api which throws an unhelpful error
+const apiGetS3Object = async (input: { key: string }) => { throw new Error("no access") }
+
+// you can catch and extend the error to add more context
+const helpfulGetS3Object = async (input: { key: string }) => {
+  try {
+    await getS3Object();
+  } catch (error) {
+    if (error.message === "no access") throw HelpfulError("getS3Object.error: could not get object", {
+      cause: error, // !: by adding the "cause" here, we'll retain the stack trace of the original error
+      input,
+    })
+  }
+}
+```

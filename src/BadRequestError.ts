@@ -1,4 +1,4 @@
-import { HelpfulError } from './HelpfulError';
+import { HelpfulError, HelpfulErrorMetadata } from './HelpfulError';
 
 /**
  * BadRequestError errors are used to explicitly declare that your logic has successfully rejected a request
@@ -11,7 +11,7 @@ import { HelpfulError } from './HelpfulError';
  * - e.g., the [simple-lambda-handlers](https://github.com/ehmpathy/simple-lambda-handlers) library returns an error to the caller (to notify them of the rejection) while marking the lambda invocation as successful (to avoid cloudwatch metric errors and automated retries)
  */
 export class BadRequestError extends HelpfulError {
-  constructor(message: string, metadata?: Record<string, any>) {
+  constructor(message: string, metadata?: HelpfulErrorMetadata) {
     super(['BadRequestError: ', message].join(''), metadata);
   }
 }
