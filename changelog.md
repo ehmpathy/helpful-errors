@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/ehmpathy/error-fns/compare/v1.1.0...v1.2.0) (2024-06-18)
+
+
+### Features
+
+* **options:** expose the .cause native error option ([cadbf3b](https://github.com/ehmpathy/error-fns/commit/cadbf3beb59c1ef5828d5dc05339e9b113751893))
+
 ## [1.1.0](https://github.com/ehmpathy/error-fns/compare/v1.0.2...v1.1.0) (2024-06-16)
 
 
