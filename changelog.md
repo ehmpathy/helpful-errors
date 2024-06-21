@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/ehmpathy/error-fns/compare/v1.2.0...v1.3.0) (2024-06-21)
+
+
+### Features
+
+* **expand:** enable expansion of metadata in error message via env var ([ab90d47](https://github.com/ehmpathy/error-fns/commit/ab90d474deccf2804d48ace4e51c97125747afdf))
+
 ## [1.2.0](https://github.com/ehmpathy/error-fns/compare/v1.1.0...v1.2.0) (2024-06-18)
 
 
