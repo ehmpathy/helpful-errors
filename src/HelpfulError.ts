@@ -1,4 +1,6 @@
-import { omit } from 'type-fns';
+import { isPresent, omit } from 'type-fns';
+
+import { getEnvOptions } from './utils/env';
 
 export type HelpfulErrorMetadata = Record<string, any> & { cause?: Error };
 
@@ -10,11 +12,16 @@ export class HelpfulError extends Error {
     const metadataWithoutCause = metadata
       ? omit(metadata, ['cause'])
       : metadata;
-    const fullMessage = `${message}${
+    const fullMessage = [
+      message,
       metadataWithoutCause && Object.keys(metadataWithoutCause).length
-        ? `\n\n${JSON.stringify(metadataWithoutCause)}`
-        : ''
-    }`;
+        ? getEnvOptions().expand
+          ? JSON.stringify(metadataWithoutCause, null, 2)
+          : JSON.stringify(metadataWithoutCause)
+        : null,
+    ]
+      .filter(isPresent)
+      .join('\n\n');
     super(fullMessage, metadata?.cause ? { cause: metadata.cause } : undefined);
   }
 
