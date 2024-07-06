@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { isAFunction, isAPromise } from 'type-fns';
 
-export class NoErrorThrownError extends Error {}
+import { HelpfulError } from './HelpfulError';
+
+export class NoErrorThrownError extends HelpfulError {
+  constructor() {
+    super('no error was thrown');
+  }
+}
 
 /**
  * a method which returns the error thrown from executing the logic passed into it
