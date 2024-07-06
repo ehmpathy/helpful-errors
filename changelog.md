@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/ehmpathy/error-fns/compare/v1.3.0...v1.3.1) (2024-07-06)
+
+
+### Bug Fixes
+
+* **getter:** ensure no error thrown error has message ([b1d4667](https://github.com/ehmpathy/error-fns/commit/b1d46674c7b71611eee8008c9e221a8c4af0d81e))
+
 ## [1.3.0](https://github.com/ehmpathy/error-fns/compare/v1.2.0...v1.3.0) (2024-06-21)
 
 
