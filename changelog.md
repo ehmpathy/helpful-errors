@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/ehmpathy/error-fns/compare/v1.3.1...v1.3.2) (2024-07-27)
+
+
+### Bug Fixes
+
+* **practs:** bump practs to latest best ([dc75511](https://github.com/ehmpathy/error-fns/commit/dc75511722a63ea42798c069b4299afe08a2c807))
+
 ## [1.3.1](https://github.com/ehmpathy/error-fns/compare/v1.3.0...v1.3.1) (2024-07-06)
 
 
