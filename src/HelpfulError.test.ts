@@ -48,4 +48,12 @@ describe('HelpfulError', () => {
     });
     expect(error).toMatchSnapshot();
   });
+  it('should serialize to json expressively', () => {
+    const error = new HelpfulError('could not get joke about pizza', {
+      why: 'it was too cheesy', // 😂
+    });
+    const json = JSON.stringify(error);
+    expect(json).toContain('joke about pizza');
+    expect(json).toContain('it was too cheesy');
+  });
 });

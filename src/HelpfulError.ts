@@ -41,4 +41,23 @@ export class HelpfulError extends Error {
     // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw new this(message, metadata) as InstanceType<T>;
   }
+
+  /**
+   * an override to ensure that errors are serialized to json expressively
+   *
+   * ref
+   * - https://stackoverflow.com/a/18391400/3068233
+   * - https://github.com/nodejs/node/issues/29090
+   */
+  toJSON<T extends typeof HelpfulError>(
+    this: T, // https://stackoverflow.com/a/51749145/3068233
+    message: string,
+    metadata?: HelpfulErrorMetadata,
+  ): Record<string, any> {
+    const obj: Record<string, any> = {};
+    Object.getOwnPropertyNames(this).forEach((key) => {
+      obj[key] = (this as any)[key as any];
+    }, this);
+    return obj;
+  }
 }
