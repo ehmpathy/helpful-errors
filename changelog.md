@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/ehmpathy/error-fns/compare/v1.3.3...v1.3.4) (2024-09-15)
+
+
+### Bug Fixes
+
+* **serde:** ensure error keys sorted for toJSON ([666dabd](https://github.com/ehmpathy/error-fns/commit/666dabd3407e1b86efa256a540c4ed4e07916f2d))
+
 ## [1.3.3](https://github.com/ehmpathy/error-fns/compare/v1.3.2...v1.3.3) (2024-09-14)
 
 
