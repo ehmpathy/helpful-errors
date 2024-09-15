@@ -55,9 +55,11 @@ export class HelpfulError extends Error {
     metadata?: HelpfulErrorMetadata,
   ): Record<string, any> {
     const obj: Record<string, any> = {};
-    Object.getOwnPropertyNames(this).forEach((key) => {
-      obj[key] = (this as any)[key as any];
-    }, this);
+    Object.getOwnPropertyNames(this)
+      .sort()
+      .forEach((key) => {
+        obj[key] = (this as any)[key as any];
+      }, this);
     return obj;
   }
 }
