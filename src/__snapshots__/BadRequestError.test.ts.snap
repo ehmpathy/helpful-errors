@@ -3,5 +3,7 @@
 exports[`BadRequestError should produce a helpful, observable error message 1`] = `
 [Error: BadRequestError: no tires on the vehicle
 
-{"tires":[]}]
+{
+  "tires": []
+}]
 `;

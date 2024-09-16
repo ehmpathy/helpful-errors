@@ -3,5 +3,7 @@
 exports[`UnexpectedCodePathError should produce a helpful, observable error message 1`] = `
 [Error: UnexpectedCodePathError: no tires on the vehicle
 
-{"tires":[]}]
+{
+  "tires": []
+}]
 `;
