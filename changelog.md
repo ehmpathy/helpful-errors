@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.7](https://github.com/ehmpathy/error-fns/compare/v1.3.6...v1.3.7) (2024-09-16)
+
+
+### Bug Fixes
+
+* **cicd:** ensure package lock in sync ([3cd8f80](https://github.com/ehmpathy/error-fns/commit/3cd8f80dc1ab76aa5a1fcb791899d5fcb9241c4c))
+* **tests:** ensure snapshots reflect expand by default ([31068cf](https://github.com/ehmpathy/error-fns/commit/31068cf58ba81300d42578abd6fd3117b64b174d))
+
 ## [1.3.6](https://github.com/ehmpathy/error-fns/compare/v1.3.5...v1.3.6) (2024-09-16)
 
 
