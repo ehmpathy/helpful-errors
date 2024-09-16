@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5](https://github.com/ehmpathy/error-fns/compare/v1.3.4...v1.3.5) (2024-09-16)
+
+
+### Bug Fixes
+
+* **obs:** expand errors by default ([c127cc5](https://github.com/ehmpathy/error-fns/commit/c127cc5518fd82d635161af5ad27d3fa539bd521))
+
 ## [1.3.4](https://github.com/ehmpathy/error-fns/compare/v1.3.3...v1.3.4) (2024-09-15)
 
 
