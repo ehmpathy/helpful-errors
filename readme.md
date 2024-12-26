@@ -1,7 +1,7 @@
-# error-fns
+# helpful-errors
 
-![ci_on_commit](https://github.com/ehmpathy/error-fns/workflows/ci_on_commit/badge.svg)
-![deploy_on_tag](https://github.com/ehmpathy/error-fns/workflows/deploy_on_tag/badge.svg)
+![ci_on_commit](https://github.com/ehmpathy/helpful-errors/workflows/ci_on_commit/badge.svg)
+![deploy_on_tag](https://github.com/ehmpathy/helpful-errors/workflows/deploy_on_tag/badge.svg)
 
 Standardized helpful errors and methods for simpler, safer, and easier to read code.
 
@@ -16,7 +16,7 @@ Standardize on helpful errors for simpler, safer, easier to read code
 # install
 
 ```sh
-npm install --save @ehmpathy/error-fns
+npm install --save helpful-errors
 ```
 
 # use
