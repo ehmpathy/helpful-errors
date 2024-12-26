@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.8](https://github.com/ehmpathy/error-fns/compare/v1.3.7...v1.3.8) (2024-12-26)
+
+
+### Bug Fixes
+
+* **pkg:** rename as helpful-errors ([d570276](https://github.com/ehmpathy/error-fns/commit/d570276d51d97ec774a286e3d76c36ca88e61c6f))
+
 ## [1.3.7](https://github.com/ehmpathy/error-fns/compare/v1.3.6...v1.3.7) (2024-09-16)
 
 
