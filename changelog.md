@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.9](https://github.com/ehmpathy/helpful-errors/compare/v1.3.8...v1.3.9) (2025-09-01)
+
+
+### Bug Fixes
+
+* **errors:** drop the extended args on .toJSON, unused ([281ccc1](https://github.com/ehmpathy/helpful-errors/commit/281ccc1ed4b3b46ad996d0eb2cc012c1e9f532f3))
+* **practs:** bump to latest best ([1c72759](https://github.com/ehmpathy/helpful-errors/commit/1c7275989515e1da58678a4e12a7f41f461702c3))
+* **readme:** badges on the readme ([97aec3b](https://github.com/ehmpathy/helpful-errors/commit/97aec3b51890d857011c215f7c46a497a130b1a2))
+
 ## [1.3.8](https://github.com/ehmpathy/error-fns/compare/v1.3.7...v1.3.8) (2024-12-26)
 
 
