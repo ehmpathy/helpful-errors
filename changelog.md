@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.10](https://github.com/ehmpathy/helpful-errors/compare/v1.3.9...v1.3.10) (2025-09-01)
+
+
+### Bug Fixes
+
+* **deps:** eliminate cyclic-dep potential ([923d0e6](https://github.com/ehmpathy/helpful-errors/commit/923d0e6a96a2be80b25fe05f5e3031567271711c))
+
 ## [1.3.9](https://github.com/ehmpathy/helpful-errors/compare/v1.3.8...v1.3.9) (2025-09-01)
 
 
