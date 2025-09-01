@@ -51,8 +51,6 @@ export class HelpfulError extends Error {
    */
   toJSON<T extends typeof HelpfulError>(
     this: T, // https://stackoverflow.com/a/51749145/3068233
-    message: string,
-    metadata?: HelpfulErrorMetadata,
   ): Record<string, any> {
     const obj: Record<string, any> = {};
     Object.getOwnPropertyNames(this)
