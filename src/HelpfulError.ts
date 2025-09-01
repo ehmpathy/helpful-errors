@@ -1,4 +1,6 @@
-import { isPresent, omit } from 'type-fns';
+// import from subdirs directly to avoid cyclic-dependency from withAssure, which leverages HelpfulError
+import { isPresentAssess as isPresent } from 'type-fns/dist/checks/isPresent.assess';
+import { omit } from 'type-fns/dist/companions/omit';
 
 import { getEnvOptions } from './utils/env';
 
