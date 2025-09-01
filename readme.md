@@ -1,7 +1,7 @@
 # helpful-errors
 
-![ci_on_commit](https://github.com/ehmpathy/helpful-errors/workflows/ci_on_commit/badge.svg)
-![deploy_on_tag](https://github.com/ehmpathy/helpful-errors/workflows/deploy_on_tag/badge.svg)
+![test](https://github.com/ehmpathy/helpful-errors/workflows/test/badge.svg)
+![publish](https://github.com/ehmpathy/helpful-errors/workflows/publish/badge.svg)
 
 Standardized helpful errors and methods for simpler, safer, and easier to read code.
 
