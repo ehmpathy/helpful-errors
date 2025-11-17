@@ -4,12 +4,28 @@ import { omit } from 'type-fns/dist/companions/omit';
 
 import { getEnvOptions } from './utils/env';
 
-export type HelpfulErrorMetadata = Record<string, any> & { cause?: Error };
+export type HelpfulErrorMetadata = Record<string, any> & {
+  /**
+   * .what = declares the error that triggered this error
+   * .why = enables stacktrace of both errors to be visible
+   *   - exposes the full stacktrace trail of each error
+   *   - includes links to each file:line where each error was thrown
+   */
+  cause?: Error;
+};
 
 /**
  * HelpfulError errors are used to add information that helps the future observer of the error understand whats going on
  */
 export class HelpfulError extends Error {
+  /**
+   * .what = the procedure executed on new HelpfulError() calls to instantiate errors
+   * .why =
+   *   - specifies how we extend the Error class
+   * .how =
+   *   - adds metadata to the message, serialized to be maximally helpful
+   *   - extracts the cuase from the metadata input, guarantees it is passed through correctly
+   */
   constructor(message: string, metadata?: HelpfulErrorMetadata) {
     const metadataWithoutCause = metadata
       ? omit(metadata, ['cause'])
@@ -25,7 +41,23 @@ export class HelpfulError extends Error {
       .filter(isPresent)
       .join('\n\n');
     super(fullMessage, metadata?.cause ? { cause: metadata.cause } : undefined);
+
+    // store the original message, metadata, and cause for later access
+    this.original = {
+      message,
+      metadata,
+      cause: metadata?.cause,
+    };
   }
+
+  /**
+   * the original message and metadata, before being formatted into the error message
+   */
+  private readonly original: {
+    message: string;
+    metadata?: HelpfulErrorMetadata;
+    cause?: Error;
+  };
 
   /**
    * a utility to throw an error of this class, for convenience
@@ -42,6 +74,46 @@ export class HelpfulError extends Error {
   ): never {
     // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw new this(message, metadata) as InstanceType<T>;
+  }
+
+  /**
+   * creates a redacted clone of the error, stripping specified parts from the message
+   *
+   * useful when you want to preserve only the core message without exposing sensitive metadata
+   *
+   * e.g.,
+   * ```ts
+   * const original = new HelpfulError('payment failed', { cardNumber: '1234-5678' });
+   * const redacted = original.redact(['metadata']); // only contains 'payment failed' and cause
+   * const fullyRedacted = original.redact(['metadata', 'cause']); // only contains 'payment failed'
+   * ```
+   */
+  public redact(parts: Array<'metadata' | 'cause'>): this {
+    // determine what to include based on what's being redacted
+    const shouldIncludeMetadata = !parts.includes('metadata');
+    const shouldIncludeCause = !parts.includes('cause');
+
+    // build the metadata object for the new instance
+    const newMetadata: HelpfulErrorMetadata | undefined = (() => {
+      if (!shouldIncludeMetadata && !shouldIncludeCause) {
+        return undefined;
+      }
+      if (shouldIncludeMetadata && shouldIncludeCause) {
+        return this.original.metadata;
+      }
+      if (shouldIncludeCause && this.original.cause) {
+        return { cause: this.original.cause };
+      }
+      if (shouldIncludeMetadata) {
+        return this.original.metadata
+          ? omit(this.original.metadata, ['cause'])
+          : undefined;
+      }
+      return undefined;
+    })();
+
+    // create a new instance with the original message and filtered metadata
+    return new (this.constructor as any)(this.original.message, newMetadata);
   }
 
   /**

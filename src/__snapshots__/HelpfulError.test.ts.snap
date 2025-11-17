@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`HelpfulError redact input=["cause"] should redact only cause when ["cause"] is specified 1`] = `
+[Error: wrapped error
+
+{"userId":123}]
+`;
+
+exports[`HelpfulError redact input=["metadata", "cause"] should redact both metadata and cause when both, ["metadata", "cause"], are specified 1`] = `[Error: wrapped error]`;
+
+exports[`HelpfulError redact input=["metadata"] should redact only metadata when ["metadata"] is specified 1`] = `[Error: payment failed]`;
+
+exports[`HelpfulError redact input=["metadata"] should work with expanded metadata format 1`] = `[Error: error with expanded metadata]`;
+
 exports[`HelpfulError should be able to prettify the error metadata when ERROR_EXPAND env var is true 1`] = `
 [Error: could not get joke about pizza
 
