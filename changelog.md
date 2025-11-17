@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/ehmpathy/helpful-errors/compare/v1.3.10...v1.4.0) (2025-11-17)
+
+
+### Features
+
+* **redact:** support .redact() for easy redaction ([a2b3fa3](https://github.com/ehmpathy/helpful-errors/commit/a2b3fa327babf46ce122d3b35c072accb3f03882))
+
 ## [1.3.10](https://github.com/ehmpathy/helpful-errors/compare/v1.3.9...v1.3.10) (2025-09-01)
 
 
