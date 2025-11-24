@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/ehmpathy/helpful-errors/compare/v1.5.1...v1.5.2) (2025-11-24)
+
+
+### Bug Fixes
+
+* **class:** ensure .original attribute is non-enumerable ([cb93ce6](https://github.com/ehmpathy/helpful-errors/commit/cb93ce6e01856c20710dfd12d6be2605d0aa7be4))
+
 ## [1.5.1](https://github.com/ehmpathy/helpful-errors/compare/v1.5.0...v1.5.1) (2025-11-24)
 
 
