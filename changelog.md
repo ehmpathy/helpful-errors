@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/ehmpathy/helpful-errors/compare/v1.5.0...v1.5.1) (2025-11-24)
+
+
+### Bug Fixes
+
+* **wrap:** expose HelpfulError.wrap as an alias to withHelpfulError ([4879c9b](https://github.com/ehmpathy/helpful-errors/commit/4879c9b42c39a948bb0b49e347ea4a7070cfc3ec))
+
 ## [1.5.0](https://github.com/ehmpathy/helpful-errors/compare/v1.4.0...v1.5.0) (2025-11-24)
 
 
