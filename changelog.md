@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/ehmpathy/helpful-errors/compare/v1.4.0...v1.5.0) (2025-11-24)
+
+
+### Features
+
+* **wrap:** expose withHelpfulError wrapper ([befb1dc](https://github.com/ehmpathy/helpful-errors/commit/befb1dcd1aeb1a06a35d8815f2ffeec8b86377ab))
+
 ## [1.4.0](https://github.com/ehmpathy/helpful-errors/compare/v1.3.10...v1.4.0) (2025-11-17)
 
 
