@@ -3,6 +3,7 @@ import { isPresentAssess as isPresent } from 'type-fns/dist/checks/isPresent.ass
 import { omit } from 'type-fns/dist/companions/omit';
 
 import { getEnvOptions } from './utils/env';
+import { withHelpfulError } from './withHelpfulError';
 
 export type HelpfulErrorMetadata = Record<string, any> & {
   /**
@@ -74,6 +75,56 @@ export class HelpfulError extends Error {
   ): never {
     // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw new this(message, metadata) as InstanceType<T>;
+  }
+
+  /**
+   * a utility to wrap a function with helpful error handling
+   *
+   * e.g.,
+   * ```ts
+   * const getUser = HelpfulError.wrap(
+   *   async (id: string) => await db.query('SELECT * FROM users WHERE id = ?', [id]),
+   *   { message: 'could not get user', metadata: { table: 'users' } }
+   * );
+   * ```
+   */
+  public static wrap<
+    T extends typeof HelpfulError,
+    TLogic extends (...args: any[]) => Promise<any>,
+  >(
+    this: T,
+    logic: TLogic,
+    options: {
+      message: string;
+      metadata: Record<string, any>;
+    },
+  ): (...args: Parameters<TLogic>) => Promise<Awaited<ReturnType<TLogic>>>;
+  public static wrap<
+    T extends typeof HelpfulError,
+    TLogic extends (...args: any[]) => any,
+  >(
+    this: T,
+    logic: TLogic,
+    options: {
+      message: string;
+      metadata: Record<string, any>;
+    },
+  ): (...args: Parameters<TLogic>) => ReturnType<TLogic>;
+  public static wrap<
+    T extends typeof HelpfulError,
+    TLogic extends (...args: any[]) => any,
+  >(
+    this: T,
+    logic: TLogic,
+    options: {
+      message: string;
+      metadata: Record<string, any>;
+    },
+  ): TLogic {
+    return withHelpfulError(logic, {
+      variant: this,
+      ...options,
+    });
   }
 
   /**

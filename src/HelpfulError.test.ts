@@ -1,4 +1,4 @@
-import { HelpfulError } from './HelpfulError';
+import { HelpfulError, HelpfulErrorMetadata } from './HelpfulError';
 import { getError } from './getError';
 import { getEnvOptions } from './utils/env';
 
@@ -55,6 +55,88 @@ describe('HelpfulError', () => {
     const json = JSON.stringify(error);
     expect(json).toContain('joke about pizza');
     expect(json).toContain('it was too cheesy');
+  });
+  describe('wrap', () => {
+    describe('sync logic', () => {
+      it('should wrap a synchronous procedure withHelpfulError', async () => {
+        const logic = () => {
+          throw new Error('original error');
+        };
+        const wrapped = HelpfulError.wrap(logic, {
+          message: 'could not execute',
+          metadata: { context: 'test' },
+        });
+
+        const error = await getError(() => wrapped());
+        expect(error).toBeInstanceOf(HelpfulError);
+        expect(error.message).toContain('could not execute');
+        expect(error.message).toContain('context');
+        expect((error.cause as Error).message).toBe('original error');
+      });
+
+      it('should return the result when sync function succeeds', () => {
+        const logic = (x: number) => x * 2;
+        const wrapped = HelpfulError.wrap(logic, {
+          message: 'could not multiply',
+          metadata: { operation: 'multiply' },
+        });
+
+        const result = wrapped(5);
+        expect(result).toBe(10);
+      });
+    });
+
+    describe('async logic', () => {
+      it('should wrap an async procedure withHelpfulError', async () => {
+        const logic = async () => {
+          throw new Error('async error');
+        };
+        const wrapped = HelpfulError.wrap(logic, {
+          message: 'could not process async',
+          metadata: { context: 'async-test' },
+        });
+
+        const error = await getError(wrapped());
+        expect(error).toBeInstanceOf(HelpfulError);
+        expect(error.message).toContain('could not process async');
+        expect(error.message).toContain('async-test');
+        expect((error.cause as Error).message).toBe('async error');
+      });
+
+      it('should return the result when async function succeeds', async () => {
+        const logic = async (value: number) => {
+          return value * 2;
+        };
+        const wrapped = HelpfulError.wrap(logic, {
+          message: 'could not process',
+          metadata: { operation: 'double' },
+        });
+
+        const result = await wrapped(5);
+        expect(result).toBe(10);
+      });
+    });
+
+    it('should use the correct error variant when called on a subclass', async () => {
+      class CustomError extends HelpfulError {
+        constructor(message: string, metadata?: HelpfulErrorMetadata) {
+          super(['CustomError: ', message].join(''), metadata);
+        }
+      }
+
+      const logic = () => {
+        throw new Error('bad input');
+      };
+      const wrapped = CustomError.wrap(logic, {
+        message: 'validation failed',
+        metadata: { field: 'email' },
+      });
+
+      const error = await getError(() => wrapped());
+      expect(error).toBeInstanceOf(CustomError);
+      expect(error.message).toContain('CustomError');
+      expect(error.message).toContain('validation failed');
+    });
   });
   describe('redact', () => {
     describe('generally', () => {
