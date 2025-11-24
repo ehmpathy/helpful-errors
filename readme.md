@@ -160,6 +160,86 @@ const phone = customer.phoneNumber ?? UnexpectedCodePathError.throw(
 );
 ```
 
+### .wrap
+
+The errors extended from `HelpfulError` include a `.wrap` static method for wrapping functions with helpful error handling. This provides a cleaner alternative to try-catch blocks while automatically preserving error context.
+
+For example, instead of:
+```ts
+const getUser = async (id: string) => {
+  try {
+    return await database.query('SELECT * FROM users WHERE id = ?', [id]);
+  } catch (error) {
+    throw new HelpfulError('could not get user', {
+      userId: id,
+      cause: error,
+    });
+  }
+};
+```
+
+You can simply write:
+```ts
+const getUser = HelpfulError.wrap(
+  async (id: string) => {
+    return await database.query('SELECT * FROM users WHERE id = ?', [id]);
+  },
+  {
+    message: 'could not get user',
+    metadata: { table: 'users' },
+  }
+);
+```
+
+The `.wrap` method works with both synchronous and asynchronous functions, and automatically uses the correct error variant:
+
+```ts
+// Works with custom error variants
+const validateEmail = BadRequestError.wrap(
+  (email: string) => {
+    if (!email.includes('@')) throw new Error('invalid format');
+    return email;
+  },
+  {
+    message: 'email validation failed',
+    metadata: { field: 'email' },
+  }
+);
+
+// Works with async functions
+const processPayment = HelpfulError.wrap(
+  async (amount: number) => {
+    return await paymentGateway.charge(amount);
+  },
+  {
+    message: 'could not process payment',
+    metadata: { service: 'stripe' },
+  }
+);
+```
+
+### .redact
+
+The errors extended from `HelpfulError` include a `.redact` method for creating redacted clones of errors. This is useful when you need to prevent internal implementation details from leaking to frontends or external systems.
+
+The `.redact` method accepts an array specifying which parts to redact: `['metadata']`, `['cause']`, or both `['metadata', 'cause']`.
+
+```ts
+// imagine you have an error with some internal details you'd like to keep private
+const error = new HelpfulError('failed to fetch user profile', {
+  query: 'SELECT * FROM users WHERE id = ?',
+  params: {
+    userId: 'usr_123',
+  },
+  cause: new Error('ECONNREFUSED: connection timeout'),
+});
+
+// you can redact both metadata and cause, to make it safe to expose
+const redactedForFrontend = error.redact(['metadata', 'cause']);
+console.log(redactedForFrontend.message); // "failed to fetch user profile"
+console.log(redactedForFrontend.cause); // undefined
+```
+
 ### HelpfulError parameter options.cause
 
 The .cause parameter is a helpful feature of native errors. It allows you to chain errors together in a way that retains the full stack trace across errors.
