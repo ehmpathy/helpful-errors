@@ -56,6 +56,33 @@ describe('HelpfulError', () => {
     expect(json).toContain('joke about pizza');
     expect(json).toContain('it was too cheesy');
   });
+  describe('original', () => {
+    it('should not include the original property in JSON serialization', () => {
+      const error = new HelpfulError('test error', {
+        data: 'metadata',
+      });
+      const json = JSON.stringify(error);
+      expect(json).not.toContain('original');
+    });
+    it('should not enumerate the original property', () => {
+      const error = new HelpfulError('test error', {
+        data: 'metadata',
+      });
+      const keys = Object.keys(error);
+      expect(keys).not.toContain('original');
+    });
+    it('should still allow internal access to the original property', () => {
+      const originalError = new Error('cause');
+      const error = new HelpfulError('test error', {
+        data: 'metadata',
+        cause: originalError,
+      });
+      // The redact method uses the original property internally
+      const redacted = error.redact(['metadata']);
+      expect(redacted.message).toBe('test error');
+      expect(redacted.cause).toBe(originalError);
+    });
+  });
   describe('wrap', () => {
     describe('sync logic', () => {
       it('should wrap a synchronous procedure withHelpfulError', async () => {

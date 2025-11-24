@@ -43,18 +43,23 @@ export class HelpfulError extends Error {
       .join('\n\n');
     super(fullMessage, metadata?.cause ? { cause: metadata.cause } : undefined);
 
-    // store the original message, metadata, and cause for later access
-    this.original = {
-      message,
-      metadata,
-      cause: metadata?.cause,
-    };
+    // store the original message, metadata, and cause for later access (non-enumerable)
+    Object.defineProperty(this, 'original', {
+      value: {
+        message,
+        metadata,
+        cause: metadata?.cause,
+      },
+      enumerable: false, // non enumerable, so it wont pollute toJSON, Object.keys(), nor for...in loops; its only intended for internal use
+      writable: false,
+      configurable: false,
+    });
   }
 
   /**
    * the original message and metadata, before being formatted into the error message
    */
-  private readonly original: {
+  private readonly original!: {
     message: string;
     metadata?: HelpfulErrorMetadata;
     cause?: Error;
@@ -179,6 +184,7 @@ export class HelpfulError extends Error {
   ): Record<string, any> {
     const obj: Record<string, any> = {};
     Object.getOwnPropertyNames(this)
+      .filter((key) => key !== 'original')
       .sort()
       .forEach((key) => {
         obj[key] = (this as any)[key as any];
