@@ -1,5 +1,5 @@
-import { UnexpectedCodePathError } from './UnexpectedCodePathError';
 import { getError } from './getError';
+import { UnexpectedCodePathError } from './UnexpectedCodePathError';
 
 describe('UnexpectedCodePathError', () => {
   it('should produce a helpful, observable error message', () => {

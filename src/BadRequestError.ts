@@ -1,4 +1,4 @@
-import { HelpfulError, HelpfulErrorMetadata } from './HelpfulError';
+import { HelpfulError, type HelpfulErrorMetadata } from './HelpfulError';
 
 /**
  * BadRequestError errors are used to explicitly declare that your logic has successfully rejected a request
