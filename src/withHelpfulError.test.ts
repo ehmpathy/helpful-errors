@@ -1,6 +1,6 @@
 import { BadRequestError } from './BadRequestError';
-import { HelpfulError } from './HelpfulError';
 import { getError } from './getError';
+import { HelpfulError } from './HelpfulError';
 import { withHelpfulError } from './withHelpfulError';
 
 describe('withHelpfulError', () => {

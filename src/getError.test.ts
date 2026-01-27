@@ -1,5 +1,5 @@
-import { HelpfulError } from './HelpfulError';
 import { getError } from './getError';
+import { HelpfulError } from './HelpfulError';
 
 describe('getError', () => {
   it('can get error from synchronous logic', () => {

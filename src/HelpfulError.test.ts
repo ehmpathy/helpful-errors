@@ -1,5 +1,5 @@
-import { HelpfulError, HelpfulErrorMetadata } from './HelpfulError';
 import { getError } from './getError';
+import { HelpfulError, type HelpfulErrorMetadata } from './HelpfulError';
 import { getEnvOptions } from './utils/env';
 
 jest.mock('./utils/env');
