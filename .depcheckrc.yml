@@ -1,3 +1,5 @@
+ignorePatterns:
+  - 'provision/**'
 ignores:
   - depcheck
   - declapract
@@ -19,3 +21,10 @@ ignores:
   - tsx
   - tsc-alias
   - yalc
+  - "@tsconfig/node-lts-strictest"
+  - core-js
+  - test-fns
+  - ts-jest
+  - ts-node
+  - declastruct
+  - declastruct-github
