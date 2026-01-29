@@ -101,15 +101,67 @@ throw new HelpfulError(
 )
 ```
 
+#### .metadata generic
+
+You can define typed metadata for your custom error classes via the generic type parameter:
+
+```ts
+class UserError extends HelpfulError<{ userId: string; action: string }> {}
+
+const error = new UserError('operation failed', {
+  userId: '123',
+  action: 'delete'
+});
+
+// typed access to metadata
+error.metadata.userId;  // string
+error.metadata.action;  // string
+error.metadata.wrong;   // typescript error
+```
+
+#### .metadata getter
+
+Access the original metadata object via the `.metadata` getter:
+
+```ts
+const error = new HelpfulError('failed', {
+  userId: '123',
+  context: { action: 'delete' }
+});
+
+// access original metadata (not the formatted message)
+console.log(error.metadata);
+// { userId: '123', context: { action: 'delete' } }
+
+// useful for programmatic access
+if (error.metadata.userId) {
+  trackErrorByUser(error.metadata.userId);
+}
+```
+
+Note: the `.metadata` property is non-enumerable, so it won't appear in `Object.keys()` or `JSON.stringify()` output — the metadata is already serialized in the message.
+
+#### environment variables
+
+Control error message format via `ERROR_EXPAND`:
+
+```sh
+# default: pretty-printed json (multi-line)
+ERROR_EXPAND=true
+
+# compact single-line json
+ERROR_EXPAND=false
+```
+
 ### getError
 
 The `getError` method is the cherry-on-top of this library.
 
-When writing tests for logic that throws an error in certain situations, you may want to verify that the code indeed throws this error in a test.
+When you write tests for logic that throws an error in certain situations, you may want to verify that the code indeed throws this error in a test.
 
 The `getError` utility makes it really easy to assert that the expected error is thrown.
 
-Under the hood, it executes or awaits the logic or promise you give it as input, catches the error that is throw, or throws a NoErrorThrownError of its own. It does the legwork of handling all three cases you may need to use it in and defining the return type correctly.
+Under the hood, it executes or awaits the logic or promise you give it as input, catches the error that is thrown, or returns a `NoErrorThrownError` if no error occurred. It does the legwork of all three cases you may need to use it in and defines the return type correctly.
 
 usecase 1: synchronous logic
 ```ts
@@ -261,4 +313,24 @@ const helpfulGetS3Object = async (input: { key: string }) => {
     })
   }
 }
+```
+
+### .toJSON
+
+HelpfulError includes a custom `.toJSON()` method for helpful serialization.
+
+By default, errors omit `message` and `stack` from serialization. Helpful errors, instead, explicitly includes them to save dev's hours via clear errors that surface full context:
+
+```ts
+const error = new HelpfulError('failed', { userId: '123' });
+
+JSON.stringify(error);
+// {
+//   "name": "HelpfulError",
+//   "message": "failed, { \"userId\": \"123\" }",
+//   "stack": "..."
+// }
+
+// useful for api responses
+res.status(500).json({ error: error.toJSON() });
 ```
