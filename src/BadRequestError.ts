@@ -10,8 +10,15 @@ import { HelpfulError, type HelpfulErrorMetadata } from './HelpfulError';
  * Commonly used to return an error to the caller while marking the execution as successful
  * - e.g., the [simple-lambda-handlers](https://github.com/ehmpathy/simple-lambda-handlers) library returns an error to the caller (to notify them of the rejection) while marking the lambda invocation as successful (to avoid cloudwatch metric errors and automated retries)
  */
-export class BadRequestError extends HelpfulError {
-  constructor(message: string, metadata?: HelpfulErrorMetadata) {
-    super(['BadRequestError: ', message].join(''), metadata);
+export class BadRequestError<
+  TMetadata extends HelpfulErrorMetadata = HelpfulErrorMetadata,
+> extends HelpfulError<TMetadata> {
+  constructor(
+    message: string,
+    ...[metadata]: HelpfulErrorMetadata extends TMetadata
+      ? [metadata?: TMetadata]
+      : [metadata: TMetadata]
+  ) {
+    super(['BadRequestError: ', message].join(''), metadata as TMetadata);
   }
 }

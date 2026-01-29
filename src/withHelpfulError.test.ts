@@ -34,7 +34,6 @@ describe('withHelpfulError', () => {
 
   it('should pass through non-Error throws unchanged', () => {
     const logic = () => {
-      // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw 'string error';
     };
     const wrappedLogic = withHelpfulError(logic, {

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`BadRequestError should produce a helpful, observable error message 1`] = `
 [Error: BadRequestError: no tires on the vehicle

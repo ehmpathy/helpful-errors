@@ -1,5 +1,6 @@
 import { BadRequestError } from './BadRequestError';
 import { getError } from './getError';
+import { HelpfulError } from './HelpfulError';
 
 describe('BadRequestError', () => {
   it('should produce a helpful, observable error message', () => {
@@ -26,5 +27,22 @@ describe('BadRequestError', () => {
     });
     expect(error).toBeInstanceOf(BadRequestError);
     expect(error.message).toContain('phone two not found!');
+  });
+  describe('typed metadata generic', () => {
+    it('should support typed metadata via generic', () => {
+      class TypedBadRequest extends BadRequestError<{ field: string }> {}
+      const error = new TypedBadRequest('invalid input', { field: 'email' });
+
+      expect(error.metadata?.field).toEqual('email');
+      expect(error).toBeInstanceOf(BadRequestError);
+      expect(error).toBeInstanceOf(HelpfulError);
+    });
+
+    it('should constrain metadata input', () => {
+      class TypedBadRequest extends BadRequestError<{ field: string }> {}
+
+      // @ts-expect-error - wrong key
+      new TypedBadRequest('error', { wrong: 'key' });
+    });
   });
 });
