@@ -2,7 +2,7 @@
   "name": "helpful-errors",
   "author": "ehmpathy",
   "description": "A standard set of errors and methods for simpler, safer, and easier to read code.",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "repository": "ehmpathy/helpful-errors",
   "homepage": "https://github.com/ehmpathy/helpful-errors",
   "keywords": [
