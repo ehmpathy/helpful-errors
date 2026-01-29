@@ -1,15 +1,17 @@
+import type { HelpfulErrorConstructor } from './HelpfulError';
 import { HelpfulError } from './HelpfulError';
 
 /**
  * .what = wrap a procedure withHelpfulError
  * .why = get a more observable error around any given chunk of logic, upon failure
  */
+
 export function withHelpfulError<
   TLogic extends (...args: any[]) => Promise<any>,
 >(
   logic: TLogic,
   options: {
-    variant?: typeof HelpfulError;
+    variant?: HelpfulErrorConstructor;
     message: string;
     metadata: Record<string, any>;
   },
@@ -17,7 +19,7 @@ export function withHelpfulError<
 export function withHelpfulError<TLogic extends (...args: any[]) => any>(
   logic: TLogic,
   options: {
-    variant?: typeof HelpfulError;
+    variant?: HelpfulErrorConstructor;
     message: string;
     metadata: Record<string, any>;
   },
@@ -25,7 +27,7 @@ export function withHelpfulError<TLogic extends (...args: any[]) => any>(
 export function withHelpfulError<TLogic extends (...args: any[]) => any>(
   logic: TLogic,
   options: {
-    variant?: typeof HelpfulError;
+    variant?: HelpfulErrorConstructor;
     message: string;
     metadata: Record<string, any>;
   },

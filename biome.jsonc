@@ -54,7 +54,8 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noExcessiveCognitiveComplexity": "warn"
+        "noExcessiveCognitiveComplexity": "warn",
+        "noThisInStatic": "off"
       },
       "correctness": {
         "noUnusedImports": {

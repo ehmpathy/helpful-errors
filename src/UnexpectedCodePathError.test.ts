@@ -1,4 +1,5 @@
 import { getError } from './getError';
+import { HelpfulError } from './HelpfulError';
 import { UnexpectedCodePathError } from './UnexpectedCodePathError';
 
 describe('UnexpectedCodePathError', () => {
@@ -28,5 +29,28 @@ describe('UnexpectedCodePathError', () => {
     });
     expect(error).toBeInstanceOf(UnexpectedCodePathError);
     expect(error.message).toContain('phone two not found!');
+  });
+  describe('typed metadata generic', () => {
+    it('should support typed metadata via generic', () => {
+      class TypedUnexpected extends UnexpectedCodePathError<{
+        field: string;
+      }> {}
+      const error = new TypedUnexpected('unexpected state', {
+        field: 'status',
+      });
+
+      expect(error.metadata?.field).toEqual('status');
+      expect(error).toBeInstanceOf(UnexpectedCodePathError);
+      expect(error).toBeInstanceOf(HelpfulError);
+    });
+
+    it('should constrain metadata input', () => {
+      class TypedUnexpected extends UnexpectedCodePathError<{
+        field: string;
+      }> {}
+
+      // @ts-expect-error - wrong key
+      new TypedUnexpected('error', { wrong: 'key' });
+    });
   });
 });

@@ -16,9 +16,20 @@ export type HelpfulErrorMetadata = Record<string, any> & {
 };
 
 /**
+ * .what = constructor type for HelpfulError and subclasses
+ * .why = enables relaxed type constraints for polymorphic static methods
+ */
+export type HelpfulErrorConstructor = new (
+  message: string,
+  metadata?: any,
+) => HelpfulError<any>;
+
+/**
  * HelpfulError errors are used to add information that helps the future observer of the error understand whats going on
  */
-export class HelpfulError extends Error {
+export class HelpfulError<
+  TMetadata extends HelpfulErrorMetadata = HelpfulErrorMetadata,
+> extends Error {
   /**
    * .what = the procedure executed on new HelpfulError() calls to instantiate errors
    * .why =
@@ -27,7 +38,12 @@ export class HelpfulError extends Error {
    *   - adds metadata to the message, serialized to be maximally helpful
    *   - extracts the cuase from the metadata input, guarantees it is passed through correctly
    */
-  constructor(message: string, metadata?: HelpfulErrorMetadata) {
+  constructor(
+    message: string,
+    ...[metadata]: HelpfulErrorMetadata extends TMetadata
+      ? [metadata?: TMetadata] // default type - optional
+      : [metadata: TMetadata] // specific type - required
+  ) {
     const metadataWithoutCause = metadata
       ? omit(metadata, ['cause'])
       : metadata;
@@ -61,9 +77,23 @@ export class HelpfulError extends Error {
    */
   private readonly original!: {
     message: string;
-    metadata?: HelpfulErrorMetadata;
+    metadata?: TMetadata;
     cause?: Error;
   };
+
+  /**
+   * .what = public accessor for the metadata passed to the error
+   * .why = enables programmatic access to metadata without parse of the message
+   * .note = getter is non-enumerable by default, so it won't pollute toJSON or Object.keys()
+   */
+  public get metadata(): HelpfulErrorMetadata extends TMetadata
+    ? TMetadata | undefined // default type - metadata was optional
+    : TMetadata {
+    // specific type - metadata was required
+    return this.original.metadata as HelpfulErrorMetadata extends TMetadata
+      ? TMetadata | undefined
+      : TMetadata;
+  }
 
   /**
    * a utility to throw an error of this class, for convenience
@@ -76,9 +106,10 @@ export class HelpfulError extends Error {
   public static throw<T extends typeof HelpfulError>(
     this: T, // https://stackoverflow.com/a/51749145/3068233
     message: string,
-    metadata?: HelpfulErrorMetadata,
+    metadata?: InstanceType<T> extends HelpfulError<infer M>
+      ? M
+      : HelpfulErrorMetadata,
   ): never {
-    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw new this(message, metadata) as InstanceType<T>;
   }
 
@@ -94,7 +125,7 @@ export class HelpfulError extends Error {
    * ```
    */
   public static wrap<
-    T extends typeof HelpfulError,
+    T extends HelpfulErrorConstructor,
     TLogic extends (...args: any[]) => Promise<any>,
   >(
     this: T,
@@ -105,7 +136,7 @@ export class HelpfulError extends Error {
     },
   ): (...args: Parameters<TLogic>) => Promise<Awaited<ReturnType<TLogic>>>;
   public static wrap<
-    T extends typeof HelpfulError,
+    T extends HelpfulErrorConstructor,
     TLogic extends (...args: any[]) => any,
   >(
     this: T,
@@ -116,7 +147,7 @@ export class HelpfulError extends Error {
     },
   ): (...args: Parameters<TLogic>) => ReturnType<TLogic>;
   public static wrap<
-    T extends typeof HelpfulError,
+    T extends HelpfulErrorConstructor,
     TLogic extends (...args: any[]) => any,
   >(
     this: T,
