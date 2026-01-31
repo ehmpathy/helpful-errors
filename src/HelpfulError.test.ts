@@ -401,4 +401,179 @@ describe('HelpfulError', () => {
       expect(error).toBeInstanceOf(TypedError);
     });
   });
+  describe('code', () => {
+    describe('getter', () => {
+      it('should return undefined for base HelpfulError', () => {
+        const error = new HelpfulError('test error');
+        expect(error.code).toBeUndefined();
+      });
+
+      it('should return class code when no instance code', () => {
+        class ErrorWithCode extends HelpfulError {
+          public static code = { http: 418, slug: 'TEAPOT' } as const;
+        }
+        const error = new ErrorWithCode('test error');
+        expect(error.code).toEqual({ http: 418, slug: 'TEAPOT' });
+      });
+
+      it('should return instance code when no class code', () => {
+        const error = new HelpfulError('test error', {
+          code: { slug: 'CUSTOM' },
+        });
+        expect(error.code).toEqual({ slug: 'CUSTOM' });
+      });
+
+      it('should merge instance code over class code', () => {
+        class ErrorWithCode extends HelpfulError {
+          public static code = { http: 400 } as const;
+        }
+        const error = new ErrorWithCode('test error', {
+          code: { slug: 'CUSTOM' },
+        });
+        expect(error.code).toEqual({ http: 400, slug: 'CUSTOM' });
+      });
+
+      it('should allow instance to override http from class', () => {
+        class ErrorWithCode extends HelpfulError {
+          public static code = { http: 400 } as const;
+        }
+        const error = new ErrorWithCode('test error', {
+          code: { http: 422, slug: 'VALIDATION' },
+        });
+        expect(error.code).toEqual({ http: 422, slug: 'VALIDATION' });
+      });
+
+      it('should return undefined when code: null in metadata (explicit opt-out)', () => {
+        class ErrorWithCode extends HelpfulError {
+          public static code = { http: 400 } as const;
+        }
+        const error = new ErrorWithCode('test error', { code: null });
+        expect(error.code).toBeUndefined();
+      });
+    });
+
+    describe('static code', () => {
+      it('should have HelpfulError.code as undefined', () => {
+        expect(HelpfulError.code).toBeUndefined();
+      });
+
+      it('should allow subclass to define static code', () => {
+        class CustomError extends HelpfulError {
+          public static code = {
+            http: 503,
+            slug: 'SERVICE_UNAVAILABLE',
+          } as const;
+        }
+        expect(CustomError.code).toEqual({
+          http: 503,
+          slug: 'SERVICE_UNAVAILABLE',
+        });
+      });
+    });
+
+    describe('serialization', () => {
+      it('should omit code from toJSON when no slug', () => {
+        class ErrorWithHttpOnly extends HelpfulError {
+          public static code = { http: 400 } as const;
+        }
+        const error = new ErrorWithHttpOnly('test error');
+        const json = JSON.stringify(error);
+        const parsed = JSON.parse(json);
+        expect(parsed.code).toBeUndefined();
+      });
+
+      it('should include code in toJSON when slug present from class', () => {
+        class ErrorWithSlug extends HelpfulError {
+          public static code = { http: 402, slug: 'DECLINED:PAYMENT' } as const;
+        }
+        const error = new ErrorWithSlug('payment declined');
+        const json = JSON.stringify(error);
+        const parsed = JSON.parse(json);
+        expect(parsed.code).toEqual({ http: 402, slug: 'DECLINED:PAYMENT' });
+      });
+
+      it('should include code in toJSON when slug present from instance', () => {
+        class ErrorWithHttpOnly extends HelpfulError {
+          public static code = { http: 400 } as const;
+        }
+        const error = new ErrorWithHttpOnly('test error', {
+          code: { slug: 'CUSTOM' },
+        });
+        const json = JSON.stringify(error);
+        const parsed = JSON.parse(json);
+        expect(parsed.code).toEqual({ http: 400, slug: 'CUSTOM' });
+      });
+
+      it('should include full merged code in toJSON', () => {
+        class ErrorWithHttpOnly extends HelpfulError {
+          public static code = { http: 400 } as const;
+        }
+        const error = new ErrorWithHttpOnly('test error', {
+          code: { http: 422, slug: 'VALIDATION' },
+        });
+        const json = JSON.stringify(error);
+        const parsed = JSON.parse(json);
+        expect(parsed.code).toEqual({ http: 422, slug: 'VALIDATION' });
+      });
+    });
+
+    describe('metadata isolation', () => {
+      it('should not include code field in error.metadata', () => {
+        const error = new HelpfulError('test error', {
+          code: { slug: 'TEST' },
+          userId: 123,
+        });
+        expect(error.metadata).toEqual({ userId: 123 });
+        expect((error.metadata as any)?.code).toBeUndefined();
+      });
+
+      it('should not include code in error message', () => {
+        const error = new HelpfulError('test error', {
+          code: { slug: 'TEST' },
+          userId: 123,
+        });
+        expect(error.message).not.toContain('code');
+        expect(error.message).not.toContain('TEST');
+        expect(error.message).toContain('userId');
+        expect(error.message).toContain('123');
+      });
+    });
+
+    describe('inheritance', () => {
+      it('should allow custom subclass to inherit parent code', () => {
+        class ParentError extends HelpfulError {
+          public static code = { http: 400 };
+        }
+        class ChildError extends ParentError {}
+
+        const error = new ChildError('test error');
+        expect(error.code).toEqual({ http: 400 });
+      });
+
+      it('should allow custom subclass to override parent code', () => {
+        class ParentError extends HelpfulError {
+          public static code = { http: 400 };
+        }
+        class ChildError extends ParentError {
+          public static code = { http: 422, slug: 'VALIDATION' };
+        }
+
+        const error = new ChildError('test error');
+        expect(error.code).toEqual({ http: 422, slug: 'VALIDATION' });
+      });
+
+      it('should support multi-level inheritance', () => {
+        class Level1 extends HelpfulError {
+          public static code = { http: 400 };
+        }
+        class Level2 extends Level1 {
+          public static code = { http: 400, slug: 'LEVEL2' };
+        }
+        class Level3 extends Level2 {}
+
+        const error = new Level3('test error');
+        expect(error.code).toEqual({ http: 400, slug: 'LEVEL2' });
+      });
+    });
+  });
 });

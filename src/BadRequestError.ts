@@ -13,6 +13,12 @@ import { HelpfulError, type HelpfulErrorMetadata } from './HelpfulError';
 export class BadRequestError<
   TMetadata extends HelpfulErrorMetadata = HelpfulErrorMetadata,
 > extends HelpfulError<TMetadata> {
+  /**
+   * .what = default http code for bad request errors
+   * .why = aligns with http 400 semantics
+   */
+  public static code = { http: 400 } as const;
+
   constructor(
     message: string,
     ...[metadata]: HelpfulErrorMetadata extends TMetadata

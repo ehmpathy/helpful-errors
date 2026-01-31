@@ -334,3 +334,91 @@ JSON.stringify(error);
 // useful for api responses
 res.status(500).json({ error: error.toJSON() });
 ```
+
+### .code
+
+Errors extended from `HelpfulError` support declarative error codes via the `.code` property. This enables machine-readable error classification for api responses, logs, and metrics.
+
+#### default codes
+
+The built-in error classes have default http codes:
+- `BadRequestError` has `{ http: 400 }`
+- `UnexpectedCodePathError` has `{ http: 500 }`
+- `HelpfulError` has no default code
+
+```ts
+const error = new BadRequestError('invalid input');
+console.log(error.code?.http); // 400
+console.log(error.code?.slug); // undefined
+```
+
+#### custom error classes with baked-in codes
+
+Define error classes with baked-in codes for consistent classification:
+
+```ts
+class DeclinedPaymentError extends BadRequestError {
+  public static code = { http: 402, slug: 'DECLINED:PAYMENT' } as const;
+}
+
+const error = new DeclinedPaymentError('card rejected');
+console.log(error.code); // { http: 402, slug: 'DECLINED:PAYMENT' }
+```
+
+#### instance-level code override
+
+Supply a code at throw time for context-specific classification:
+
+```ts
+throw new BadRequestError('email already registered', {
+  code: { slug: 'DUPLICATE_EMAIL' },
+  email,
+});
+
+// error.code => { http: 400, slug: 'DUPLICATE_EMAIL' }
+```
+
+Instance codes merge with class codes — instance fields override class fields:
+
+```ts
+throw new BadRequestError('validation failed', {
+  code: { http: 422, slug: 'VALIDATION' },
+});
+
+// error.code => { http: 422, slug: 'VALIDATION' }
+```
+
+#### opt-out with code: null
+
+Explicitly clear any inherited code:
+
+```ts
+const error = new DeclinedPaymentError('card rejected', { code: null });
+console.log(error.code); // undefined
+```
+
+#### serialization
+
+Error codes only appear in JSON serialization when a slug is present — this prevents log spam with default http codes and ensures opt-in only behavior:
+
+```ts
+// no slug => code omitted from JSON
+const error1 = new BadRequestError('test');
+JSON.stringify(error1); // no "code" field
+
+// slug present => code included in JSON
+const error2 = new BadRequestError('test', { code: { slug: 'CUSTOM' } });
+JSON.stringify(error2); // includes { "code": { "http": 400, "slug": "CUSTOM" } }
+```
+
+#### api handler example
+
+```ts
+app.use((err, req, res, next) => {
+  const code = err.code ?? { http: 500 };
+  res.status(code.http ?? 500).json({
+    error: err.message,
+    code: code.slug,
+  });
+});
+```

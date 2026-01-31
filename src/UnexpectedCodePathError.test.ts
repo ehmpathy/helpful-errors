@@ -53,4 +53,33 @@ describe('UnexpectedCodePathError', () => {
       new TypedUnexpected('error', { wrong: 'key' });
     });
   });
+  describe('code', () => {
+    it('should have static code = { http: 500 }', () => {
+      expect(UnexpectedCodePathError.code).toEqual({ http: 500 });
+    });
+
+    it('should have instance.code.http as 500', () => {
+      const error = new UnexpectedCodePathError('test error');
+      expect(error.code?.http).toEqual(500);
+    });
+
+    it('should have instance.code.slug as undefined by default', () => {
+      const error = new UnexpectedCodePathError('test error');
+      expect(error.code?.slug).toBeUndefined();
+    });
+
+    it('should allow instance to override with slug', () => {
+      const error = new UnexpectedCodePathError('test error', {
+        code: { slug: 'IMPOSSIBLE:STATE' },
+      });
+      expect(error.code).toEqual({ http: 500, slug: 'IMPOSSIBLE:STATE' });
+    });
+
+    it('should omit code from toJSON (no slug by default)', () => {
+      const error = new UnexpectedCodePathError('test error');
+      const json = JSON.stringify(error);
+      const parsed = JSON.parse(json);
+      expect(parsed.code).toBeUndefined();
+    });
+  });
 });
