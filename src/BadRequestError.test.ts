@@ -45,4 +45,49 @@ describe('BadRequestError', () => {
       new TypedBadRequest('error', { wrong: 'key' });
     });
   });
+  describe('code', () => {
+    it('should have static code = { http: 400 }', () => {
+      expect(BadRequestError.code).toEqual({ http: 400 });
+    });
+
+    it('should have instance.code.http as 400', () => {
+      const error = new BadRequestError('test error');
+      expect(error.code?.http).toEqual(400);
+    });
+
+    it('should have instance.code.slug as undefined by default', () => {
+      const error = new BadRequestError('test error');
+      expect(error.code?.slug).toBeUndefined();
+    });
+
+    it('should allow instance to override with slug', () => {
+      const error = new BadRequestError('test error', {
+        code: { slug: 'VALIDATION' },
+      });
+      expect(error.code).toEqual({ http: 400, slug: 'VALIDATION' });
+    });
+
+    it('should allow instance to override http', () => {
+      const error = new BadRequestError('test error', {
+        code: { http: 422, slug: 'UNPROCESSABLE' },
+      });
+      expect(error.code).toEqual({ http: 422, slug: 'UNPROCESSABLE' });
+    });
+
+    it('should omit code from toJSON (no slug by default)', () => {
+      const error = new BadRequestError('test error');
+      const json = JSON.stringify(error);
+      const parsed = JSON.parse(json);
+      expect(parsed.code).toBeUndefined();
+    });
+
+    it('should include code in toJSON when slug supplied', () => {
+      const error = new BadRequestError('test error', {
+        code: { slug: 'DUPLICATE_EMAIL' },
+      });
+      const json = JSON.stringify(error);
+      const parsed = JSON.parse(json);
+      expect(parsed.code).toEqual({ http: 400, slug: 'DUPLICATE_EMAIL' });
+    });
+  });
 });
