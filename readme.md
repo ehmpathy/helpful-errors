@@ -75,11 +75,82 @@ const getLikedSongsByUser = ({ userUuid }: { userUuid: string }) => {
 }
 ```
 
-Whatever the reason for a caller making a logically invalid request, it's important to distinguish when *your code* is at fault versus when *the request* is at fault.
+Whatever the reason for a caller to make a logically invalid request, it's important to distinguish when *your code* is at fault versus when *the request* is at fault.
 
-This is particularly useful when monitoring error rates. Its important to distinguish whether your software `failed to execute` or whether it `successfully rejected` the request for observability in monitoring for issues. The `BadRequestError` enables us to do this easily
+This is particularly useful when you monitor error rates. Its important to distinguish whether your software `failed to execute` or whether it `successfully rejected` the request for observability in monitor dashboards. The `BadRequestError` enables us to do this easily
 
 For example, libraries such as the [simple-lambda-handlers](https://github.com/ehmpathy/simple-lambda-handlers) leverage `BadRequestErrors` to ensure that a bad request both successfully returns an error to the caller but is not marked as an lambda invocation error.
+
+### ConstraintError
+
+The `ConstraintError` extends `BadRequestError` with a clearer, more intuitive name. Use it when the caller violated a constraint — invalid input, forbidden action, or broken business rule.
+
+```ts
+import { ConstraintError } from 'helpful-errors';
+
+// guard clause with static throw
+const phone = customer.phone ?? ConstraintError.throw('customer must have phone');
+
+// validation
+if (amount <= 0) throw new ConstraintError('amount must be positive', { amount });
+
+// business rule
+if (!user.canAccessResource(resource))
+  throw new ConstraintError('user lacks permission', { userId: user.id, resourceId: resource.id });
+```
+
+`ConstraintError` includes:
+- `ConstraintError.code.http` — `400` (same as BadRequestError)
+- `ConstraintError.code.exit` — `2` (unix usage error convention)
+- `ConstraintError.emoji` — `'✋'` (for log utilities)
+- `instanceof BadRequestError` — `true` (backwards compatible)
+
+### MalfunctionError
+
+The `MalfunctionError` extends `UnexpectedCodePathError` with a clearer, more intuitive name. Use it when the system itself malfunctioned — a bug, unexpected state, or internal failure.
+
+```ts
+import { MalfunctionError } from 'helpful-errors';
+
+// guard clause with static throw
+const config = process.env.CONFIG ?? MalfunctionError.throw('config not loaded');
+
+// impossible state detection
+switch (status) {
+  case 'active': return handleActive();
+  case 'inactive': return handleInactive();
+  default: throw new MalfunctionError('unknown status', { status });
+}
+
+// wrap external calls
+const fetchUser = MalfunctionError.wrap(
+  async (id: string) => api.getUser(id),
+  { message: 'failed to fetch user', metadata: { service: 'user-api' } }
+);
+```
+
+`MalfunctionError` includes:
+- `MalfunctionError.code.http` — `500` (same as UnexpectedCodePathError)
+- `MalfunctionError.code.exit` — `1` (unix general error convention)
+- `MalfunctionError.emoji` — `'💥'` (for log utilities)
+- `instanceof UnexpectedCodePathError` — `true` (backwards compatible)
+
+### ConstraintError vs MalfunctionError
+
+The fundamental distinction:
+
+| error type | whose fault? | what it means | emoji |
+|------------|--------------|---------------|-------|
+| `ConstraintError` | caller's fault | "you can't do that" | ✋ |
+| `MalfunctionError` | our fault | "we broke" | 💥 |
+
+In logs, this makes debug instant:
+```
+✋ ConstraintError: customer must have a phone number
+💥 MalfunctionError: payment processor returned unexpected shape
+```
+
+Both error types inherit all capabilities from their parent classes (`BadRequestError` and `UnexpectedCodePathError`). This includes `.throw()`, `.wrap()`, `.redact()`, and typed metadata generics.
 
 ### HelpfulError
 

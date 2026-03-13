@@ -11,16 +11,4 @@ export class UnexpectedCodePathError<
    * .why = aligns with http 500 semantics
    */
   public static code = { http: 500 } as const;
-
-  constructor(
-    message: string,
-    ...[metadata]: HelpfulErrorMetadata extends TMetadata
-      ? [metadata?: TMetadata]
-      : [metadata: TMetadata]
-  ) {
-    super(
-      ['UnexpectedCodePathError: ', message].join(''),
-      metadata as TMetadata,
-    );
-  }
 }

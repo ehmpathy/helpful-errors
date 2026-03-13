@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MalfunctionError serialization should include code in serialization when slug is present 1`] = `
+"{
+  "message": "💥 MalfunctionError: database connection lost",
+  "stack": "Error: 💥 MalfunctionError: database connection lost\\n    at Object.<anonymous> (/home/vlad/git/ehmpathy/helpful-errors/src/MalfunctionError.test.ts:116:21)\\n    at Promise.finally.completed (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)\\n    at new Promise (<anonymous>)\\n    at callAsyncCircusFn (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)\\n    at _callCircusTest (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)\\n    at _runTest (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:947:3)\\n    at /home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:849:7\\n    at _runTestsForDescribeBlock (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:862:11)\\n    at _runTestsForDescribeBlock (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:857:11)\\n    at _runTestsForDescribeBlock (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:857:11)\\n    at run (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:761:3)\\n    at runAndTransformResultsToJestFormat (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)\\n    at jestAdapter (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/runner.js:89:33)\\n    at runTestInternal (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-runner@30.2.0/node_modules/jest-runner/build/index.js:285:34)\\n    at runTest (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-runner@30.2.0/node_modules/jest-runner/build/index.js:349:50)",
+  "code": {
+    "http": 500,
+    "exit": 1,
+    "slug": "DB_CONN_LOST"
+  }
+}"
+`;
+
+exports[`MalfunctionError serialization should serialize to json expressively 1`] = `
+"{
+  "message": "💥 MalfunctionError: unexpected state\\n\\n{\\n  \\"component\\": \\"database\\",\\n  \\"state\\": \\"disconnected\\"\\n}",
+  "stack": "Error: 💥 MalfunctionError: unexpected state\\n\\n{\\n  \\"component\\": \\"database\\",\\n  \\"state\\": \\"disconnected\\"\\n}\\n    at Object.<anonymous> (/home/vlad/git/ehmpathy/helpful-errors/src/MalfunctionError.test.ts:108:21)\\n    at Promise.finally.completed (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)\\n    at new Promise (<anonymous>)\\n    at callAsyncCircusFn (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)\\n    at _callCircusTest (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)\\n    at _runTest (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:947:3)\\n    at /home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:849:7\\n    at _runTestsForDescribeBlock (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:862:11)\\n    at _runTestsForDescribeBlock (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:857:11)\\n    at _runTestsForDescribeBlock (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:857:11)\\n    at run (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:761:3)\\n    at runAndTransformResultsToJestFormat (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)\\n    at jestAdapter (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-circus@30.2.0/node_modules/jest-circus/build/runner.js:89:33)\\n    at runTestInternal (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-runner@30.2.0/node_modules/jest-runner/build/index.js:285:34)\\n    at runTest (/home/vlad/git/ehmpathy/helpful-errors/node_modules/.pnpm/jest-runner@30.2.0/node_modules/jest-runner/build/index.js:349:50)"
+}"
+`;
+
+exports[`MalfunctionError should produce a helpful, observable error message 1`] = `
+[Error: 💥 MalfunctionError: database connection lost
+
+{
+  "stage": "prod"
+}]
+`;

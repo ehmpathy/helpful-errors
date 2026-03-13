@@ -28,3 +28,5 @@ ignores:
   - ts-node
   - declastruct
   - declastruct-github
+  - rhachet-brains-anthropic
+  - rhachet-brains-xai

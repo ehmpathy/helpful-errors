@@ -10,8 +10,26 @@ import { withHelpfulError } from './withHelpfulError';
  * .why = enables declarative error classification
  */
 export type HelpfulErrorCode = {
+  /**
+   * .what = http status code for api responses
+   * .why = enables http handlers to map errors to standard status codes
+   * .e.g., 400 for bad request, 500 for internal server error
+   */
   http?: number;
+
+  /**
+   * .what = machine-readable error identifier
+   * .why = enables programmatic error handlers and client-side error maps
+   * .e.g., 'RATE_LIMITED', 'INVALID_EMAIL', 'DB_CONN_LOST'
+   */
   slug?: string;
+
+  /**
+   * .what = unix exit code for cli tools
+   * .why = enables cli tools to exit with meaningful codes
+   * .e.g., 1 for general error, 2 for usage error (bad input)
+   */
+  exit?: number;
 };
 
 export type HelpfulErrorMetadata = Record<string, any> & {
@@ -63,8 +81,23 @@ export class HelpfulError<
     const metadataForMessage = metadata
       ? omit(metadata, ['cause', 'code'])
       : metadata;
+
+    // check for static emoji on the class
+    const emoji = (new.target as typeof HelpfulError & { emoji?: string })
+      .emoji;
+
+    // build prefix with optional emoji and class name
+    // omit prefix for base HelpfulError unless it has an emoji
+    const isSubclass = new.target.name !== 'HelpfulError';
+    const prefix = emoji
+      ? `${emoji} ${new.target.name}: `
+      : isSubclass
+        ? `${new.target.name}: `
+        : '';
+
+    // build the full message
     const fullMessage = [
-      message,
+      prefix + message,
       metadataForMessage && Object.keys(metadataForMessage).length
         ? getEnvOptions().expand
           ? JSON.stringify(metadataForMessage, null, 2)
