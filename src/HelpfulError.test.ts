@@ -576,4 +576,50 @@ describe('HelpfulError', () => {
       });
     });
   });
+
+  describe('emoji', () => {
+    it('should not include emoji prefix when class has no static emoji', () => {
+      const error = new HelpfulError('test error');
+      expect(error.message).toEqual('test error');
+      expect(error.message).not.toContain('✋');
+      expect(error.message).not.toContain('💥');
+    });
+
+    it('should include emoji prefix when subclass has static emoji', () => {
+      class EmojiError extends HelpfulError {
+        public static emoji = '🎯';
+      }
+      const error = new EmojiError('target acquired');
+      expect(error.message).toEqual('🎯 EmojiError: target acquired');
+    });
+
+    it('should include emoji prefix with metadata', () => {
+      class EmojiError extends HelpfulError {
+        public static emoji = '🔥';
+      }
+      const error = new EmojiError('on fire', { temp: 9000 });
+      expect(error.message).toContain('🔥 EmojiError: on fire');
+      expect(error.message).toContain('"temp"');
+    });
+
+    it('should inherit emoji from parent class', () => {
+      class ParentEmoji extends HelpfulError {
+        public static emoji = '🌊';
+      }
+      class ChildEmoji extends ParentEmoji {}
+      const error = new ChildEmoji('wave');
+      expect(error.message).toEqual('🌊 ChildEmoji: wave');
+    });
+
+    it('should allow child class to override parent emoji', () => {
+      class ParentEmoji extends HelpfulError {
+        public static emoji = '🌊';
+      }
+      class ChildEmoji extends ParentEmoji {
+        public static emoji = '🏄';
+      }
+      const error = new ChildEmoji('surf');
+      expect(error.message).toEqual('🏄 ChildEmoji: surf');
+    });
+  });
 });

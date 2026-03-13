@@ -18,13 +18,4 @@ export class BadRequestError<
    * .why = aligns with http 400 semantics
    */
   public static code = { http: 400 } as const;
-
-  constructor(
-    message: string,
-    ...[metadata]: HelpfulErrorMetadata extends TMetadata
-      ? [metadata?: TMetadata]
-      : [metadata: TMetadata]
-  ) {
-    super(['BadRequestError: ', message].join(''), metadata as TMetadata);
-  }
 }
