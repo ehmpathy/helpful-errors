@@ -28,5 +28,6 @@ ignores:
   - test-fns
   - declastruct
   - declastruct-github
+  - domain-objects
   - rhachet-brains-anthropic
   - rhachet-brains-xai

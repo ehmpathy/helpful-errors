@@ -56,13 +56,16 @@ importers:
         version: 0.47.49(@huggingface/transformers@3.8.1)(@tensorflow/tfjs@4.22.0(seedrandom@3.0.5))(@types/node@22.15.21)(declapract@0.13.16)(zod@4.3.4)
       declastruct:
         specifier: 1.7.3
-        version: 1.7.3(domain-objects@0.31.9)
+        version: 1.7.3(domain-objects@0.31.7(@huggingface/transformers@3.8.1)(@tensorflow/tfjs@4.22.0(seedrandom@3.0.5))(@types/node@22.15.21)(zod@4.3.4))
       declastruct-github:
         specifier: 1.3.0
         version: 1.3.0(@huggingface/transformers@3.8.1)(@tensorflow/tfjs@4.22.0(seedrandom@3.0.5))(@types/node@22.15.21)(zod@4.3.4)
       depcheck:
         specifier: 1.4.3
         version: 1.4.3
+      domain-objects:
+        specifier: 0.31.7
+        version: 0.31.7(@huggingface/transformers@3.8.1)(@tensorflow/tfjs@4.22.0(seedrandom@3.0.5))(@types/node@22.15.21)(zod@4.3.4)
       esbuild-register:
         specifier: 3.6.0
         version: 3.6.0(esbuild@0.25.12)
@@ -7845,12 +7848,12 @@ snapshots:
       - ws
       - zod
 
-  declastruct@1.7.3(domain-objects@0.31.9):
+  declastruct@1.7.3(domain-objects@0.31.7(@huggingface/transformers@3.8.1)(@tensorflow/tfjs@4.22.0(seedrandom@3.0.5))(@types/node@22.15.21)(zod@4.3.4)):
     dependencies:
       bottleneck: 2.19.5
       chalk: 5.4.1
       commander: 14.0.2
-      domain-objects: 0.31.9
+      domain-objects: 0.31.7(@huggingface/transformers@3.8.1)(@tensorflow/tfjs@4.22.0(seedrandom@3.0.5))(@types/node@22.15.21)(zod@4.3.4)
       helpful-errors: 1.5.3
       jest-diff: 30.0.2
       rhachet-artifact-git: 1.1.3
