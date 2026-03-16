@@ -104,19 +104,26 @@ describe('ConstraintError', () => {
   });
 
   describe('serialization', () => {
+    // sanitize stack traces for snapshot stability across environments
+    const sanitizeForSnapshot = (error: Error) => {
+      const obj = JSON.parse(JSON.stringify(error));
+      obj.stack = '[STACK]';
+      return JSON.stringify(obj, null, 2);
+    };
+
     it('should serialize to json expressively', () => {
       const error = new ConstraintError('validation failed', {
         field: 'email',
         value: 'not-an-email',
       });
-      expect(JSON.stringify(error, null, 2)).toMatchSnapshot();
+      expect(sanitizeForSnapshot(error)).toMatchSnapshot();
     });
 
     it('should include code in serialization when slug is present', () => {
       const error = new ConstraintError('rate limit exceeded', {
         code: { slug: 'RATE_LIMITED' },
       });
-      expect(JSON.stringify(error, null, 2)).toMatchSnapshot();
+      expect(sanitizeForSnapshot(error)).toMatchSnapshot();
     });
   });
 });
