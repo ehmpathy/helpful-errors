@@ -6,3 +6,4 @@
 {"stone":"3.2.reflect.test.defects","status":"blocked","blocker":"review.self","reason":"review.self required: has-complete-defect-coverage"}
 {"stone":"3.2.reflect.test.defects","status":"blocked","blocker":"approval","reason":"wait for human approval"}
 {"stone":"3.2.reflect.test.defects","status":"approved"}
+{"stone":"3.2.reflect.test.defects","status":"passed"}

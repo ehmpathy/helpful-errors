@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      domain-objects:
-        specifier: 0.31.9
-        version: 0.31.9
-      helpful-errors:
-        specifier: 1.5.3
-        version: 1.5.3
       type-fns:
         specifier: 1.21.0
         version: 1.21.0
