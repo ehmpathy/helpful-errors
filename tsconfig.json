@@ -25,8 +25,8 @@
       ]
     },
     "incremental": true,
-    "module": "commonjs",
-    "moduleResolution": "node"
+    "module": "node16",
+    "moduleResolution": "node16"
   },
   "include": [
     "**/*.ts"
@@ -34,7 +34,6 @@
   "exclude": [
     "dist",
     "coverage",
-    "node_modules",
-    "provision"
+    "node_modules"
   ]
 }

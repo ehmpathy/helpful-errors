@@ -14,6 +14,10 @@ ignores:
   - rhachet-roles-ehmpathy
   - "@tsconfig/node20"
   - "@tsconfig/strictest"
+  - "@tsconfig/node-lts-strictest"
+  - core-js
+  - ts-jest
+  - ts-node
   - "@biomejs/biome"
   - esbuild-register
   - "@swc/core"
@@ -21,12 +25,9 @@ ignores:
   - tsx
   - tsc-alias
   - yalc
-  - "@tsconfig/node-lts-strictest"
-  - core-js
   - test-fns
-  - ts-jest
-  - ts-node
   - declastruct
   - declastruct-github
+  - domain-objects
   - rhachet-brains-anthropic
   - rhachet-brains-xai
