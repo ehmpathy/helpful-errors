@@ -1,4 +1,5 @@
-import { isAFunction, isAPromise } from 'type-fns';
+import { isAFunction } from 'type-fns/dist/checks/isAFunction';
+import { isAPromise } from 'type-fns/dist/checks/isAPromise';
 
 import { HelpfulError } from './HelpfulError';
 
