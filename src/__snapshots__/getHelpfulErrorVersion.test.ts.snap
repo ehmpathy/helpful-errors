@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`getHelpfulErrorVersion contract output matrix (snapshot) should match the snapshot across every documented variant 1`] = `
+[
+  {
+    "case": "base HelpfulError",
+    "result": {
+      "present": true,
+      "type": "string",
+    },
+  },
+  {
+    "case": "builtin subclass",
+    "result": {
+      "present": true,
+      "type": "string",
+    },
+  },
+  {
+    "case": "custom subclass",
+    "result": {
+      "present": true,
+      "type": "string",
+    },
+  },
+  {
+    "case": "foreign copy (branded, no class link)",
+    "result": {
+      "present": true,
+      "type": "string",
+    },
+  },
+  {
+    "case": "plain Error",
+    "result": {
+      "present": false,
+      "type": "undefined",
+    },
+  },
+  {
+    "case": "null",
+    "result": {
+      "present": false,
+      "type": "undefined",
+    },
+  },
+  {
+    "case": "string",
+    "result": {
+      "present": false,
+      "type": "undefined",
+    },
+  },
+  {
+    "case": "number",
+    "result": {
+      "present": false,
+      "type": "undefined",
+    },
+  },
+  {
+    "case": "plain object",
+    "result": {
+      "present": false,
+      "type": "undefined",
+    },
+  },
+]
+`;

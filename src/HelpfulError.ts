@@ -2,7 +2,9 @@
 import { isPresentAssess as isPresent } from 'type-fns/dist/checks/isPresent.assess';
 import { omit } from 'type-fns/dist/companions/omit';
 
+import { MARK_AS_HELPFUL_ERROR } from './markers';
 import { getEnvOptions } from './utils/env';
+import { version } from './version';
 
 /**
  * .what = error code with optional http status and machine-readable slug
@@ -106,6 +108,10 @@ export class HelpfulError<
       .filter(isPresent)
       .join('\n\n');
     super(fullMessage, metadata?.cause ? { cause: metadata.cause } : undefined);
+
+    // note: the realm-global brand is a static property on the class (defined via
+    // Object.defineProperty just below the class), not stamped per-instance —
+    // every subclass inherits it via the constructor prototype chain
 
     // store the original message, metadata, cause, and code for later access (non-enumerable)
     Object.defineProperty(this, 'original', {
@@ -311,6 +317,28 @@ export class HelpfulError<
     return obj;
   }
 }
+
+/**
+ * .what = the realm-global brand: this copy's version, stamped statically on the class
+ * .why =
+ *   - enables cross-copy, minification-proof detection via isHelpfulError, even when
+ *     instanceof fails across duplicate package copies (the registered symbol key is
+ *     shared realm-wide, so every copy stamps the same key on its own HelpfulError)
+ *   - static (not per-instance) so every subclass inherits it via the constructor's
+ *     prototype chain with zero per-construction cost; detection reads it off the value's
+ *     constructor (see getHelpfulErrorVersion)
+ *   - defined via Object.defineProperty (not a plain `static` class field) so the brand is
+ *     locked down: writable:false + configurable:false forbid tamper/delete that would
+ *     silently defeat detection; enumerable:false hides it from Object.keys / for...in and
+ *     keeps static props off instances, so it cannot leak into serialized errors. this
+ *     mirrors the same discipline the constructor uses for the `original` property.
+ */
+Object.defineProperty(HelpfulError, MARK_AS_HELPFUL_ERROR, {
+  value: version,
+  writable: false,
+  enumerable: false,
+  configurable: false,
+});
 
 /**
  * .what = wrap a procedure withHelpfulError
