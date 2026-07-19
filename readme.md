@@ -493,3 +493,66 @@ app.use((err, req, res, next) => {
   });
 });
 ```
+
+### isHelpfulError
+
+The `isHelpfulError` guard answers "is this one of ours?" — even across duplicate copies of `helpful-errors` in a dependency tree, where `instanceof` silently fails.
+
+When two copies of the package are installed (e.g. a nested dependency has its own copy), each copy defines its own distinct classes. An error thrown from one copy is **not** an `instanceof` the `HelpfulError` of the other copy — so `error instanceof ConstraintError` returns `false` across that boundary, and error handlers misclassify.
+
+`isHelpfulError` sidesteps this: every `HelpfulError` is stamped, in its base constructor, with a realm-global brand (`Symbol.for('helpful-errors')`). Because the brand lives in the shared symbol registry — not on any one copy's class — the guard returns `true` regardless of which copy minted the error. The brand is also minification-proof (it keys off a registered symbol, not a class name).
+
+```ts
+import { isHelpfulError } from 'helpful-errors';
+
+// http error middleware — classify correctly across copy boundaries
+app.use((err, req, res, next) => {
+  if (isHelpfulError(err)) {
+    return res.status(err.code?.http ?? 500).json(err.toJSON());
+  }
+  return res.status(500).json({ message: 'internal error' });
+});
+```
+
+It accepts `unknown`, so a `catch (e: unknown)` needs no pre-cast, and narrows to `HelpfulError` on success:
+
+```ts
+try {
+  await runTask();
+} catch (err: unknown) {
+  if (isHelpfulError(err)) {
+    // err is narrowed to HelpfulError — .code, .metadata, .redact() are all safe
+    console.log(err.code);
+  }
+}
+```
+
+#### version gate
+
+Each copy stamps its own package version onto the brand. Pass a minimum version to assert "the copy that minted this error was at least version X" — useful to gate on a capability added in a specific release:
+
+```ts
+// true only if branded AND the stamped version is >= '1.8.0'
+if (isHelpfulError(err, { version: { min: '1.8.0' } })) {
+  // safe to rely on behavior introduced at 1.8.0
+}
+```
+
+The compare is semver-aware (numeric `major.minor.patch`, not lexicographic). A non-branded value, or a stamped version below `min`, returns `false` — the guard never throws.
+
+### getHelpfulErrorVersion
+
+Read the stamped version off any branded error, or `undefined` for a non-branded value:
+
+```ts
+import { getHelpfulErrorVersion } from 'helpful-errors';
+
+getHelpfulErrorVersion(new HelpfulError('boom')); // e.g. '1.8.0'
+getHelpfulErrorVersion(new Error('plain'));       // undefined
+getHelpfulErrorVersion(null);                     // undefined
+```
+
+#### scope + caveats
+
+- **in-process only**: "global" means realm-global within one process. The brand does not survive JSON serialize/revive (a revived error is a plain object with no live brand) or cross-realm transfer (`worker_threads`, `vm`), so `isHelpfulError` returns `false` for those.
+- **version floor for detection**: a copy of `helpful-errors` older than the release that introduced the brand never stamps a brand, so `isHelpfulError` cannot detect errors it mints. Cross-copy detection requires all copies to be on a version at or above the one that introduced the brand.

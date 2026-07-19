@@ -31,3 +31,4 @@ ignores:
   - domain-objects
   - rhachet-brains-anthropic
   - rhachet-brains-xai
+  - rhachet-brains-fireworksai
