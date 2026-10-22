@@ -89,11 +89,12 @@ export class HelpfulError<
 
     // build prefix with optional emoji and class name
     // omit prefix for base HelpfulError unless it has an emoji
-    const isSubclass = new.target.name !== 'HelpfulError';
+    const className = new.target.name;
+    const isSubclass = className !== 'HelpfulError';
     const prefix = emoji
-      ? `${emoji} ${new.target.name}: `
+      ? `${emoji} ${className}: `
       : isSubclass
-        ? `${new.target.name}: `
+        ? `${className}: `
         : '';
 
     // build the full message
@@ -300,8 +301,8 @@ export class HelpfulError<
   ): Record<string, any> {
     const obj: Record<string, any> = {};
 
-    // enumerate own properties
-    Object.getOwnPropertyNames(this)
+    // enumerate own properties, plus the inherited name accessor
+    [...new Set([...Object.getOwnPropertyNames(this), 'name'])]
       .filter((key) => key !== 'original')
       .sort()
       .forEach((key) => {
@@ -338,6 +339,33 @@ Object.defineProperty(HelpfulError, MARK_AS_HELPFUL_ERROR, {
   writable: false,
   enumerable: false,
   configurable: false,
+});
+
+/**
+ * .what = names each error by its class, via one accessor on HelpfulError.prototype
+ * .why =
+ *   - String(error), the stack header, and wire serializers (e.g., aws lambda errorType)
+ *     read `name`; without this, every HelpfulError read as 'Error'
+ *   - an inherited accessor (not an own property stamped per instance) yields to every
+ *     override a subclass may declare: a prototype assignment, a getter, a class field,
+ *     or an assignment after super()
+ *   - the setter stores an own non-enumerable data property, same shape as native message,
+ *     so `this.name = 'X'` still wins and Object.keys stays clean
+ */
+Object.defineProperty(HelpfulError.prototype, 'name', {
+  get(this: HelpfulError): string {
+    return this.constructor.name;
+  },
+  set(this: HelpfulError, value: string) {
+    Object.defineProperty(this, 'name', {
+      value,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+  },
+  enumerable: false,
+  configurable: true,
 });
 
 /**

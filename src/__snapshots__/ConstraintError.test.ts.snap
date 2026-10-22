@@ -3,6 +3,7 @@
 exports[`ConstraintError serialization should include code in serialization when slug is present 1`] = `
 "{
   "message": "✋ ConstraintError: rate limit exceeded",
+  "name": "ConstraintError",
   "stack": "[STACK]",
   "code": {
     "http": 400,
@@ -15,12 +16,13 @@ exports[`ConstraintError serialization should include code in serialization when
 exports[`ConstraintError serialization should serialize to json expressively 1`] = `
 "{
   "message": "✋ ConstraintError: validation failed\\n\\n{\\n  \\"field\\": \\"email\\",\\n  \\"value\\": \\"not-an-email\\"\\n}",
+  "name": "ConstraintError",
   "stack": "[STACK]"
 }"
 `;
 
 exports[`ConstraintError should produce a helpful, observable error message 1`] = `
-[Error: ✋ ConstraintError: email must be valid
+[ConstraintError: ✋ ConstraintError: email must be valid
 
 {
   "email": "invalid"

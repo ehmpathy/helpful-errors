@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`HelpfulError.name carries its own class name BadRequestError should render the class name on every surface 1`] = `
+{
+  "json": {
+    "message": "BadRequestError: quote lacks provider",
+    "name": "BadRequestError",
+    "stack": "[STACK]",
+  },
+  "name": "BadRequestError",
+  "stackHeader": "BadRequestError: BadRequestError: quote lacks provider",
+  "string": "BadRequestError: BadRequestError: quote lacks provider",
+  "wire": {
+    "errorMessage": "BadRequestError: quote lacks provider",
+    "errorType": "BadRequestError",
+  },
+}
+`;
+
+exports[`HelpfulError.name carries its own class name ConstraintError should render the class name on every surface 1`] = `
+{
+  "json": {
+    "message": "✋ ConstraintError: quote lacks provider",
+    "name": "ConstraintError",
+    "stack": "[STACK]",
+  },
+  "name": "ConstraintError",
+  "stackHeader": "ConstraintError: ✋ ConstraintError: quote lacks provider",
+  "string": "ConstraintError: ✋ ConstraintError: quote lacks provider",
+  "wire": {
+    "errorMessage": "✋ ConstraintError: quote lacks provider",
+    "errorType": "ConstraintError",
+  },
+}
+`;
+
+exports[`HelpfulError.name carries its own class name HelpfulError (base) should render the class name on every surface 1`] = `
+{
+  "json": {
+    "message": "quote lacks provider",
+    "name": "HelpfulError",
+    "stack": "[STACK]",
+  },
+  "name": "HelpfulError",
+  "stackHeader": "HelpfulError: quote lacks provider",
+  "string": "HelpfulError: quote lacks provider",
+  "wire": {
+    "errorMessage": "quote lacks provider",
+    "errorType": "HelpfulError",
+  },
+}
+`;
+
+exports[`HelpfulError.name carries its own class name MalfunctionError should render the class name on every surface 1`] = `
+{
+  "json": {
+    "message": "💥 MalfunctionError: quote lacks provider",
+    "name": "MalfunctionError",
+    "stack": "[STACK]",
+  },
+  "name": "MalfunctionError",
+  "stackHeader": "MalfunctionError: 💥 MalfunctionError: quote lacks provider",
+  "string": "MalfunctionError: 💥 MalfunctionError: quote lacks provider",
+  "wire": {
+    "errorMessage": "💥 MalfunctionError: quote lacks provider",
+    "errorType": "MalfunctionError",
+  },
+}
+`;
+
+exports[`HelpfulError.name carries its own class name UnexpectedCodePathError should render the class name on every surface 1`] = `
+{
+  "json": {
+    "message": "UnexpectedCodePathError: quote lacks provider",
+    "name": "UnexpectedCodePathError",
+    "stack": "[STACK]",
+  },
+  "name": "UnexpectedCodePathError",
+  "stackHeader": "UnexpectedCodePathError: UnexpectedCodePathError: quote lacks provider",
+  "string": "UnexpectedCodePathError: UnexpectedCodePathError: quote lacks provider",
+  "wire": {
+    "errorMessage": "UnexpectedCodePathError: quote lacks provider",
+    "errorType": "UnexpectedCodePathError",
+  },
+}
+`;
+
+exports[`HelpfulError.name carries its own class name consumer subclass of ConstraintError should render the class name on every surface 1`] = `
+{
+  "json": {
+    "message": "✋ QuoteExpiredError: quote lacks provider",
+    "name": "QuoteExpiredError",
+    "stack": "[STACK]",
+  },
+  "name": "QuoteExpiredError",
+  "stackHeader": "QuoteExpiredError: ✋ QuoteExpiredError: quote lacks provider",
+  "string": "QuoteExpiredError: ✋ QuoteExpiredError: quote lacks provider",
+  "wire": {
+    "errorMessage": "✋ QuoteExpiredError: quote lacks provider",
+    "errorType": "QuoteExpiredError",
+  },
+}
+`;
+
+exports[`HelpfulError.name carries its own class name consumer subclass of HelpfulError should render the class name on every surface 1`] = `
+{
+  "json": {
+    "message": "QuoteLookupError: quote lacks provider",
+    "name": "QuoteLookupError",
+    "stack": "[STACK]",
+  },
+  "name": "QuoteLookupError",
+  "stackHeader": "QuoteLookupError: QuoteLookupError: quote lacks provider",
+  "string": "QuoteLookupError: QuoteLookupError: quote lacks provider",
+  "wire": {
+    "errorMessage": "QuoteLookupError: quote lacks provider",
+    "errorType": "QuoteLookupError",
+  },
+}
+`;
+
+exports[`HelpfulError.name serialization should emit errorType = ConstraintError on the lambda wire shape, for a thrown ConstraintError 1`] = `
+{
+  "errorMessage": "✋ ConstraintError: quote lacks provider",
+  "errorType": "ConstraintError",
+}
+`;
+
+exports[`HelpfulError.name serialization should emit errorType = its own class on the lambda wire shape, for a thrown consumer subclass of ConstraintError 1`] = `
+{
+  "errorMessage": "✋ QuoteExpiredError: quote expired",
+  "errorType": "QuoteExpiredError",
+}
+`;
