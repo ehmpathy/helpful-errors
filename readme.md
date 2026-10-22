@@ -174,22 +174,7 @@ throw new HelpfulError(
 
 #### .name
 
-Every HelpfulError carries its own class name as `.name` — the base, each built-in, and any subclass you declare:
-
-```ts
-class QuoteExpiredError extends ConstraintError {}
-
-new ConstraintError('nope').name;    // 'ConstraintError'
-new QuoteExpiredError('nope').name;  // 'QuoteExpiredError'
-String(new ConstraintError('nope')); // 'ConstraintError: ✋ ConstraintError: nope'
-```
-
-So `String(error)`, the stack header, `JSON.stringify(error)`, and wire serializers that read `name` (e.g., the aws lambda runtime's `errorType`) all name the true class.
-
-Notes:
-- through v1.7.5, `.name` read `'Error'` for every HelpfulError. code that branched on `error.name === 'Error'` should use `isHelpfulError(error)` or `instanceof` instead
-- `.name` reads the class's `Function.name`, so a bundle minified without `--keep-names` (esbuild) or `keep_classnames` (terser) reports the mangled name
-- a subclass may still name itself any way it did before: `this.name = 'X'` after `super()`, a class field, `X.prototype.name = 'X'`, or a `name` getter — each wins over the class name
+HelpfulError never touches `error.name`; it stays the native `'Error'`. To tell the class, use `instanceof` or `isHelpfulError(error)`, never `name`. The class already leads the message (`✋ ConstraintError: …`), so a set `name` would only repeat it.
 
 #### .metadata generic
 

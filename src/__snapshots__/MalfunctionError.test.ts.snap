@@ -3,7 +3,6 @@
 exports[`MalfunctionError serialization should include code in serialization when slug is present 1`] = `
 "{
   "message": "💥 MalfunctionError: database connection lost",
-  "name": "MalfunctionError",
   "stack": "[STACK]",
   "code": {
     "http": 500,
@@ -16,13 +15,12 @@ exports[`MalfunctionError serialization should include code in serialization whe
 exports[`MalfunctionError serialization should serialize to json expressively 1`] = `
 "{
   "message": "💥 MalfunctionError: unexpected state\\n\\n{\\n  \\"component\\": \\"database\\",\\n  \\"state\\": \\"disconnected\\"\\n}",
-  "name": "MalfunctionError",
   "stack": "[STACK]"
 }"
 `;
 
 exports[`MalfunctionError should produce a helpful, observable error message 1`] = `
-[MalfunctionError: 💥 MalfunctionError: database connection lost
+[Error: 💥 MalfunctionError: database connection lost
 
 {
   "stage": "prod"

@@ -1,31 +1,31 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`HelpfulError redact input=["cause"] should redact only cause when ["cause"] is specified 1`] = `
-[HelpfulError: wrapped error
+[Error: wrapped error
 
 {"userId":123}]
 `;
 
-exports[`HelpfulError redact input=["metadata", "cause"] should redact both metadata and cause when both, ["metadata", "cause"], are specified 1`] = `[HelpfulError: wrapped error]`;
+exports[`HelpfulError redact input=["metadata", "cause"] should redact both metadata and cause when both, ["metadata", "cause"], are specified 1`] = `[Error: wrapped error]`;
 
-exports[`HelpfulError redact input=["metadata"] should redact only metadata when ["metadata"] is specified 1`] = `[HelpfulError: payment failed]`;
+exports[`HelpfulError redact input=["metadata"] should redact only metadata when ["metadata"] is specified 1`] = `[Error: payment failed]`;
 
-exports[`HelpfulError redact input=["metadata"] should work with expanded metadata format 1`] = `[HelpfulError: error with expanded metadata]`;
+exports[`HelpfulError redact input=["metadata"] should work with expanded metadata format 1`] = `[Error: error with expanded metadata]`;
 
 exports[`HelpfulError should be able to prettify the error metadata when ERROR_EXPAND env var is true 1`] = `
-[HelpfulError: could not get joke about pizza
+[Error: could not get joke about pizza
 
 {
   "why": "it was too cheesy"
 }]
 `;
 
-exports[`HelpfulError should be possible to extend the call stack of an error via cause 1`] = `[HelpfulError: some helpful error]`;
+exports[`HelpfulError should be possible to extend the call stack of an error via cause 1`] = `[Error: some helpful error]`;
 
 exports[`HelpfulError should be possible to extend the call stack of an error via cause 2`] = `[Error: some original error]`;
 
 exports[`HelpfulError should produce a helpful, observable error message 1`] = `
-[HelpfulError: could not get joke about paper
+[Error: could not get joke about paper
 
 {"why":"it was tearable"}]
 `;
