@@ -172,6 +172,10 @@ throw new HelpfulError(
 )
 ```
 
+#### .name
+
+HelpfulError never touches `error.name`; it stays the native `'Error'`. To tell the class, use `instanceof` or `isHelpfulError(error)`, never `name`. The class already leads the message (`✋ ConstraintError: …`), so a set `name` would only repeat it.
+
 #### .metadata generic
 
 You can define typed metadata for your custom error classes via the generic type parameter:
