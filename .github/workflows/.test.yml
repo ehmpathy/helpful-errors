@@ -239,7 +239,8 @@ jobs:
         if: always() && hashFiles('jest-results.json') != ''
         run: |
           set -eu
-          jq -r '.testResults[] | "\(.name):\(.perfStats.runtime)"' jest-results.json | while IFS=: read -r name runtime; do
+          # jest --json emits startTime / endTime per suite (no perfStats); a null reads 0
+          jq -r '.testResults[] | "\(.name):\(if (.startTime and .endTime) then (.endTime - .startTime) else 0 end)"' jest-results.json | while IFS=: read -r name runtime; do
             seconds=$((runtime / 1000))
             if [[ $seconds -ge 30 ]]; then
               echo "::warning file=${name}::slow test: ${seconds}s"
@@ -308,7 +309,8 @@ jobs:
         if: always() && hashFiles('jest-results.json') != ''
         run: |
           set -eu
-          jq -r '.testResults[] | "\(.name):\(.perfStats.runtime)"' jest-results.json | while IFS=: read -r name runtime; do
+          # jest --json emits startTime / endTime per suite (no perfStats); a null reads 0
+          jq -r '.testResults[] | "\(.name):\(if (.startTime and .endTime) then (.endTime - .startTime) else 0 end)"' jest-results.json | while IFS=: read -r name runtime; do
             seconds=$((runtime / 1000))
             if [[ $seconds -ge 30 ]]; then
               echo "::warning file=${name}::slow test: ${seconds}s"
