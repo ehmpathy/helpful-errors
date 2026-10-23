@@ -53,7 +53,9 @@ export type HelpfulErrorConstructor = new (
 ) => HelpfulError<any>;
 
 /**
- * HelpfulError errors are used to add information that helps the future observer of the error understand whats going on
+ * .what = an error that carries the context a future observer needs to understand what went on
+ * .why = errors with class, message, and metadata cut debug time from hours to minutes
+ * .note = never set `name` on this class or any subclass; it stays the native 'Error', and the class leads the message instead. see rule.forbid.error-name-override
  */
 export class HelpfulError<
   TMetadata extends HelpfulErrorMetadata = HelpfulErrorMetadata,
