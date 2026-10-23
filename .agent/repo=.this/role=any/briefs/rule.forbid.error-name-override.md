@@ -7,24 +7,55 @@ HelpfulError and its subclasses never touch `error.name`. it stays the native `'
 forbidden, in any form:
 - `this.name = …` in a constructor
 - `Object.defineProperty(this, 'name', …)` or on any `.prototype`
-- a `name` getter, class field, or static that shadows it
+- a `name` getter or class field on an instance or prototype that shadows it
 - `name` added to `toJSON` output
 
 ## .why
 
-- the class already leads the message: `✋ ConstraintError: quote lacks provider`. a set `name` only repeats it — `ConstraintError: ✋ ConstraintError: …` in every `String(error)`, stack header, and snapshot
-- in process, the class is told via `instanceof` or `isHelpfulError(error)`. neither reads `name`
-- across a wire, a consumer reads the class from the message prefix, which every subclass carries
+`name` would be a second copy of the class. the error already carries the class where it counts.
+
+- **identity lives in the prototype chain, not a string.** `instanceof` is exact, follows inheritance (a `ConstraintError` is a `BadRequestError`; a `QuoteExpiredError` is a `ConstraintError`), and survives renames and minification. a `name` string is one flat label, with no hierarchy, that anyone can overwrite
+- **across a wire, the producer classifies.** serialization strips the prototype, so the producer's boundary middleware detects the class before the error leaves and writes a deliberate field for the consumer. the label it writes is its contract's choice, never a copy of `name`
+- **two sources of one fact drift.** a class in both `name` and the message prefix can disagree: an override, a rename that misses one. one source cannot disagree with itself. (a minifier can still mangle that one source, `new.target.name`; that hazard exists with or without `name`, and `instanceof` is immune to it)
+- **the cost lands on the reads that use `name`.** `String(error)`, the stack header, jest and snapshot output, and an aws lambda's `errorType` render `${name}: ${message}` or `name` alone. with the class in both, those read `ConstraintError: ✋ ConstraintError: …`. (node's `util.inspect` / `console.log` already prints the class beside the message today, from the constructor; a set `name` adds naught there)
+
+## .the code smell
+
+🔴 **to classify a live HelpfulError by `error.name` is a code smell. so is a request to set it.**
+
+a request to set `name` means some consumer branches on `error.name` of a live error. the defect lives in that consumer's requirement, never in this library.
+
+```ts
+// 👎 the smell — the native name reads 'Error' for every HelpfulError
+if (error.name === 'BadRequestError') return { errorType: 'BadRequestError' }; // never true
+
+// 👍 the class itself — matches BadRequestError, ConstraintError, and their subclasses
+if (error instanceof BadRequestError) return { errorType: 'BadRequestError' };
+```
+
+a flat `name` match is fragile even where it works: an exact match on `'ConstraintError'` misses `QuoteExpiredError extends ConstraintError`. class detection follows inheritance; a string label does not.
+
+the bound: a **rehydrated** wire error — a plain object or `Error` rebuilt from a response — has no prototype to check, so a consumer may read whatever label the wire carries. that label came from the producer's deliberate field; it is not this library's `name`.
+
+the fix for each consumer — in process, across duplicate package copies, across a wire, for third-party tools keyed on `name` — lives in the readme's `#### .name` section, which ships to npm. that section is the one owner of the recipe; this rule points to it.
+
+when asked to set `name`:
+1. find the consumer that switches on it
+2. question that consumer's requirement; point it at the readme's `#### .name`
+3. cite this rule
 
 ## .settled
 
 this was argued and decided. do not reopen it.
 
-- the case for a set `name`: the aws lambda runtime emits `errorType: error.name`, so a thrown ConstraintError reaches a lambda client as `errorType: 'Error'` (ehmpathy/helpful-errors#45)
-- the decision: no use case justifies a pinned `name`. the doubled class in every rendered error costs more than it buys. wire consumers classify from the message prefix instead
+- the case once made for a set `name`: the aws lambda runtime emits `errorType: error.name`, so a thrown ConstraintError reaches a lambda client as `errorType: 'Error'` (ehmpathy/helpful-errors#45)
+- the decision: the requirement behind that case was itself the defect, and was overthrown. no use case justifies a pinned `name`
+- where: the maintainer overturned it in review, 2026-10-22. the `name = class` change (#46) was closed unmerged; this rule and its clamp shipped instead (#47). the lambda producer, `ehmpathy/sdk-aws-lambda`'s `genConstraintErrorMiddleware`, detects a caller fault by `instanceof` first and then writes a fixed label of its own; its detector's `name` fallback serves rehydrated errors, which a live HelpfulError never is
 - a proposal to set `name` — by any route above — is this rule's subject, not a new question
 
 ## .enforcement
 
-- any code that sets or shadows `name` on HelpfulError or a subclass = blocker
-- `src/HelpfulError.name.test.ts` clamps it: `name === 'Error'`, no own `name`, no `name` on any class prototype, none in json. a change that turns it red is a violation, not a stale test
+- in this repo: any code that sets or shadows `name` on a class this package ships = blocker
+- in a consumer repo: this rule cannot gate code it does not own. it names the smell instead, and the readme `#### .name` carries the fix to every consumer. a consumer's own subclass that sets its own `name` is likewise beyond this package's reach, and still the smell above
+- a request, in an issue or pr, to set `name` here = the smell; answer it with this rule, never with a change
+- `src/HelpfulError.name.test.ts` clamps the invariant for every exported class, `NoErrorThrownError`, and a consumer subclass: `name === 'Error'`, no own `name`, no `name` on any prototype in the chain, none in json; on `.throw`, `.wrap`, `withHelpfulError`, and `.redact` too. (a `static name` on a class renames the constructor, not `error.name`; it is out of this rule's scope.) a change that turns it red is a violation, not a stale test

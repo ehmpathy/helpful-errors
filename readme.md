@@ -174,7 +174,20 @@ throw new HelpfulError(
 
 #### .name
 
-HelpfulError never touches `error.name`; it stays the native `'Error'`. To tell the class, use `instanceof` or `isHelpfulError(error)`, never `name`. The class already leads the message (`✋ ConstraintError: …`), so a set `name` would only repeat it.
+HelpfulError never touches `error.name`; it stays the native `'Error'`, so `String(error)`, stack headers, and an aws lambda's unhandled `errorType` all read `Error`. The class already leads the message (`✋ ConstraintError: …`), so a set `name` would only repeat it.
+
+To tell the class of a live HelpfulError, never switch on `name`:
+
+- **in process**: `error instanceof BadRequestError` for any caller fault (`ConstraintError extends BadRequestError`, so it matches both, and every subclass of either). use `instanceof ConstraintError` only where a plain `BadRequestError` must not match. where duplicate package copies may meet, `instanceof` can miss (see [isHelpfulError](#ishelpfulerror)); there, guard with `isHelpfulError(error)` and read `error.code.http` by range: `4xx` is a caller fault, `5xx` a server fault. the built-ins carry `400` (`BadRequestError`, `ConstraintError`) and `500` (`MalfunctionError`, `UnexpectedCodePathError`), and a subclass may declare its own, e.g. `409`.
+- **across a wire**: serialization drops the prototype, so the producer classifies before the error leaves. its boundary middleware checks the class and writes a deliberate field, under whatever label its consumers already expect:
+
+  ```ts
+  // matches BadRequestError, ConstraintError, and their subclasses; the label is your contract's choice
+  if (error instanceof BadRequestError) return { errorType: 'BadRequestError', errorMessage: error.message };
+  ```
+
+  for your own classes, a `static code = { http, slug }` can ride along: `error.toJSON()` emits `code` whenever a `slug` is set, so a middleware that serializes `error.toJSON()` into its response carries it. a runtime's own unhandled-throw path does not call `toJSON`. the built-in classes declare no `slug`.
+- **third-party tools keyed on `name`**: map the class to the label they expect in an adapter at that boundary; leave the error untouched.
 
 #### .metadata generic
 
@@ -401,7 +414,6 @@ const error = new HelpfulError('failed', { userId: '123' });
 
 JSON.stringify(error);
 // {
-//   "name": "HelpfulError",
 //   "message": "failed, { \"userId\": \"123\" }",
 //   "stack": "..."
 // }
