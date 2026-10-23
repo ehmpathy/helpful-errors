@@ -27,6 +27,7 @@ const config: Config = {
     // 'node_modules/(?!(@octokit|universal-user-agent|before-after-hook)/)',
   ],
   testMatch: ['**/*.integration.test.ts', '!**/.yalc/**'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/.agent/'], // .agent holds host-local actor plugins and trash, never repo tests
   setupFilesAfterEnv: ['./jest.integration.env.ts'],
 
   // use 50% of threads to leave headroom for other processes
