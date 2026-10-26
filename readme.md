@@ -397,7 +397,6 @@ const error = new HelpfulError('failed', { userId: '123' });
 
 JSON.stringify(error);
 // {
-//   "name": "HelpfulError",
 //   "message": "failed, { \"userId\": \"123\" }",
 //   "stack": "..."
 // }

@@ -32,6 +32,7 @@ const config: Config = {
     '!**/*.integration.test.ts',
     '!**/.yalc/**',
   ],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/.agent/'], // .agent holds host-local actor plugins and trash, never repo tests
   setupFilesAfterEnv: ['./jest.unit.env.ts'],
 
   // use 50% of threads to leave headroom for other processes

@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed BadRequestError when: [t0] a consumer constructs one and reads it then: String(error) leads with the native Error header 1`] = `"Error: BadRequestError: quote lacks provider"`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed BadRequestError when: [t0] a consumer constructs one and reads it then: the json carries no name, and its stack leads with the native Error header 1`] = `
+{
+  "message": "BadRequestError: quote lacks provider",
+  "stack": "Error: BadRequestError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed ConstraintError when: [t0] a consumer constructs one and reads it then: String(error) leads with the native Error header 1`] = `"Error: ✋ ConstraintError: quote lacks provider"`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed ConstraintError when: [t0] a consumer constructs one and reads it then: the json carries no name, and its stack leads with the native Error header 1`] = `
+{
+  "message": "✋ ConstraintError: quote lacks provider",
+  "stack": "Error: ✋ ConstraintError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed HelpfulError when: [t0] a consumer constructs one and reads it then: String(error) leads with the native Error header 1`] = `"Error: quote lacks provider"`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed HelpfulError when: [t0] a consumer constructs one and reads it then: the json carries no name, and its stack leads with the native Error header 1`] = `
+{
+  "message": "quote lacks provider",
+  "stack": "Error: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed MalfunctionError when: [t0] a consumer constructs one and reads it then: String(error) leads with the native Error header 1`] = `"Error: 💥 MalfunctionError: quote lacks provider"`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed MalfunctionError when: [t0] a consumer constructs one and reads it then: the json carries no name, and its stack leads with the native Error header 1`] = `
+{
+  "message": "💥 MalfunctionError: quote lacks provider",
+  "stack": "Error: 💥 MalfunctionError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed UnexpectedCodePathError when: [t0] a consumer constructs one and reads it then: String(error) leads with the native Error header 1`] = `"Error: UnexpectedCodePathError: quote lacks provider"`;
+
+exports[`helpful-errors, as installed: error.name given: [case2] an installed UnexpectedCodePathError when: [t0] a consumer constructs one and reads it then: the json carries no name, and its stack leads with the native Error header 1`] = `
+{
+  "message": "UnexpectedCodePathError: quote lacks provider",
+  "stack": "Error: UnexpectedCodePathError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case3] a consumer who tells a caller fault from a server fault when: [t0] a consumer subclass of the installed ConstraintError is constructed then: the json carries no name, and its stack leads with the native Error header 1`] = `
+{
+  "message": "✋ QuoteExpiredError: quote expired",
+  "stack": "Error: ✋ QuoteExpiredError: quote expired
+    at <frames>",
+}
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case3] a consumer who tells a caller fault from a server fault when: [t0] a consumer subclass of the installed ConstraintError is constructed then: the message carries its own class once 1`] = `"Error: ✋ QuoteExpiredError: quote expired"`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=false when: [t0] one is thrown via .throw then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: quote expired
+
+{"quoteUuid":"q-1"}"
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=false when: [t1] one is thrown via .wrap then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: could not get quote
+
+{"quoteUuid":"q-1"}"
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=false when: [t2] one is redacted via .redact then: String(error) shows the class once, the metadata gone 1`] = `"Error: ✋ ConstraintError: quote expired"`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=false when: [t3] a class with its own code is constructed with metadata then: the json carries the code and the metadata, and no name 1`] = `
+{
+  "code": {
+    "http": 409,
+    "slug": "QUOTE_VOID",
+  },
+  "message": "QuoteVoidError: quote void
+
+{"quoteUuid":"q-1"}",
+  "stack": "Error: QuoteVoidError: quote void
+
+{"quoteUuid":"q-1"}
+    at <frames>",
+}
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=true when: [t0] one is thrown via .throw then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: quote expired
+
+{
+  "quoteUuid": "q-1"
+}"
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=true when: [t1] one is thrown via .wrap then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: could not get quote
+
+{
+  "quoteUuid": "q-1"
+}"
+`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=true when: [t2] one is redacted via .redact then: String(error) shows the class once, the metadata gone 1`] = `"Error: ✋ ConstraintError: quote expired"`;
+
+exports[`helpful-errors, as installed: error.name given: [case4] a consumer path with metadata, as installed, under ERROR_EXPAND=true when: [t3] a class with its own code is constructed with metadata then: the json carries the code and the metadata, and no name 1`] = `
+{
+  "code": {
+    "http": 409,
+    "slug": "QUOTE_VOID",
+  },
+  "message": "QuoteVoidError: quote void
+
+{
+  "quoteUuid": "q-1"
+}",
+  "stack": "Error: QuoteVoidError: quote void
+
+{
+  "quoteUuid": "q-1"
+}
+    at <frames>",
+}
+`;

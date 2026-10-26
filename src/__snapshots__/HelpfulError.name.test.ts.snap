@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class BadRequestError when: [t0] one is constructed then: String(error) shows the native header and the class once 1`] = `"Error: BadRequestError: quote lacks provider"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class BadRequestError when: [t0] one is constructed then: the json carries no name, and its stack leads with the native header 1`] = `
+{
+  "message": "BadRequestError: quote lacks provider",
+  "stack": "Error: BadRequestError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class ConstraintError when: [t0] one is constructed then: String(error) shows the native header and the class once 1`] = `"Error: ✋ ConstraintError: quote lacks provider"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class ConstraintError when: [t0] one is constructed then: the json carries no name, and its stack leads with the native header 1`] = `
+{
+  "message": "✋ ConstraintError: quote lacks provider",
+  "stack": "Error: ✋ ConstraintError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class HelpfulError when: [t0] one is constructed then: String(error) shows the native header and the class once 1`] = `"Error: quote lacks provider"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class HelpfulError when: [t0] one is constructed then: the json carries no name, and its stack leads with the native header 1`] = `
+{
+  "message": "quote lacks provider",
+  "stack": "Error: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class MalfunctionError when: [t0] one is constructed then: String(error) shows the native header and the class once 1`] = `"Error: 💥 MalfunctionError: quote lacks provider"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class MalfunctionError when: [t0] one is constructed then: the json carries no name, and its stack leads with the native header 1`] = `
+{
+  "message": "💥 MalfunctionError: quote lacks provider",
+  "stack": "Error: 💥 MalfunctionError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class NoErrorThrownError, which keeps its own message when: [t0] one is constructed then: String(error) shows the native header and the class once 1`] = `"Error: NoErrorThrownError: no error was thrown"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class NoErrorThrownError, which keeps its own message when: [t0] one is constructed then: the json carries no name, and its stack leads with the native header 1`] = `
+{
+  "message": "NoErrorThrownError: no error was thrown",
+  "stack": "Error: NoErrorThrownError: no error was thrown
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class QuoteExpiredError, a consumer subclass when: [t0] one is constructed then: String(error) shows the native header and the class once 1`] = `"Error: ✋ QuoteExpiredError: quote lacks provider"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class QuoteExpiredError, a consumer subclass when: [t0] one is constructed then: the json carries no name, and its stack leads with the native header 1`] = `
+{
+  "message": "✋ QuoteExpiredError: quote lacks provider",
+  "stack": "Error: ✋ QuoteExpiredError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class UnexpectedCodePathError when: [t0] one is constructed then: String(error) shows the native header and the class once 1`] = `"Error: UnexpectedCodePathError: quote lacks provider"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case2] the class UnexpectedCodePathError when: [t0] one is constructed then: the json carries no name, and its stack leads with the native header 1`] = `
+{
+  "message": "UnexpectedCodePathError: quote lacks provider",
+  "stack": "Error: UnexpectedCodePathError: quote lacks provider
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case3] a construction path with no ERROR_EXPAND dependence when: [t1] a class with its own code is constructed bare then: the json carries the code and no name 1`] = `
+{
+  "code": {
+    "http": 409,
+    "slug": "QUOTE_EXPIRED",
+  },
+  "message": "SlugError: quote expired",
+  "stack": "Error: SlugError: quote expired
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case3] a construction path with no ERROR_EXPAND dependence when: [t2] one is redacted via .redact then: String(error) shows the class once 1`] = `"Error: ✋ QuoteExpiredError: quote expired"`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case3] a construction path with no ERROR_EXPAND dependence when: [t2] one is redacted via .redact then: the json shows the class once and no name 1`] = `
+{
+  "message": "✋ QuoteExpiredError: quote expired",
+  "stack": "Error: ✋ QuoteExpiredError: quote expired
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=false when: [t0] a class with its own code is constructed with metadata and a cause then: String(error) shows the class once and the metadata 1`] = `
+"Error: QuoteVoidError: quote void
+
+{"quoteUuid":"q-1"}"
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=false when: [t0] a class with its own code is constructed with metadata and a cause then: the json carries the code and the metadata, and no name 1`] = `
+{
+  "code": {
+    "http": 409,
+    "slug": "QUOTE_VOID",
+  },
+  "message": "QuoteVoidError: quote void
+
+{"quoteUuid":"q-1"}",
+  "stack": "Error: QuoteVoidError: quote void
+
+{"quoteUuid":"q-1"}
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=false when: [t1] one is thrown via .throw then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: quote expired
+
+{"quoteUuid":"q-1"}"
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=false when: [t2] one is thrown via .wrap then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: could not get quote
+
+{"quoteUuid":"q-1"}"
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=false when: [t3] one is thrown via withHelpfulError then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ QuoteStaleError: could not get quote
+
+{"quoteUuid":"q-1"}"
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=true when: [t0] a class with its own code is constructed with metadata and a cause then: String(error) shows the class once and the metadata 1`] = `
+"Error: QuoteVoidError: quote void
+
+{
+  "quoteUuid": "q-1"
+}"
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=true when: [t0] a class with its own code is constructed with metadata and a cause then: the json carries the code and the metadata, and no name 1`] = `
+{
+  "code": {
+    "http": 409,
+    "slug": "QUOTE_VOID",
+  },
+  "message": "QuoteVoidError: quote void
+
+{
+  "quoteUuid": "q-1"
+}",
+  "stack": "Error: QuoteVoidError: quote void
+
+{
+  "quoteUuid": "q-1"
+}
+    at <frames>",
+}
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=true when: [t1] one is thrown via .throw then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: quote expired
+
+{
+  "quoteUuid": "q-1"
+}"
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=true when: [t2] one is thrown via .wrap then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ ConstraintError: could not get quote
+
+{
+  "quoteUuid": "q-1"
+}"
+`;
+
+exports[`HelpfulError.name (rule.forbid.error-name-override) given: [case6] a construction path with metadata, under ERROR_EXPAND=true when: [t3] one is thrown via withHelpfulError then: String(error) shows the class once and the metadata 1`] = `
+"Error: ✋ QuoteStaleError: could not get quote
+
+{
+  "quoteUuid": "q-1"
+}"
+`;

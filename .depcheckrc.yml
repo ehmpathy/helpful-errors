@@ -1,5 +1,6 @@
 ignorePatterns:
   - 'provision/**'
+  - '.agent/**'
 ignores:
   - depcheck
   - declapract
