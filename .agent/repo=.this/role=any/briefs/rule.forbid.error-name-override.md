@@ -37,11 +37,15 @@ a flat `name` match is fragile even where it works: an exact match on `'Constrai
 
 the bound: a **rehydrated** wire error — a plain object or `Error` rebuilt from a response — has no prototype to check, so a consumer may read whatever label the wire carries. that label came from the producer's deliberate field; it is not this library's `name`.
 
-the fix for each consumer — in process, across duplicate package copies, across a wire, for third-party tools keyed on `name` — lives in the readme's `#### .name` section, which ships to npm. that section is the one owner of the recipe; this rule points to it.
+the consumer's fix, by where it classifies:
+- **in process**: `instanceof BadRequestError` for any caller fault (it matches `ConstraintError` and every subclass of either). `instanceof ConstraintError` only where a plain `BadRequestError` must not match
+- **across duplicate package copies**: `instanceof` can miss. guard with `isHelpfulError(error)`, then read `error.code.http` by range: `4xx` caller fault, `5xx` server fault
+- **across a wire**: the producer's boundary middleware checks the class and writes a deliberate field, under the label its contract chose
+- **third-party tools keyed on `name`**: an adapter at that boundary maps the class to their label; the error stays untouched
 
 when asked to set `name`:
 1. find the consumer that switches on it
-2. question that consumer's requirement; point it at the readme's `#### .name`
+2. question that consumer's requirement; point it at the fix above
 3. cite this rule
 
 ## .settled
@@ -56,6 +60,6 @@ this was argued and decided. do not reopen it.
 ## .enforcement
 
 - in this repo: any code that sets or shadows `name` on a class this package ships = blocker
-- in a consumer repo: this rule cannot gate code it does not own. it names the smell instead, and the readme `#### .name` carries the fix to every consumer. a consumer's own subclass that sets its own `name` is likewise beyond this package's reach, and still the smell above
+- in a consumer repo: this rule cannot gate code it does not own. it names the smell instead, and the consumer's fix above. a consumer's own subclass that sets its own `name` is likewise beyond this package's reach, and still the smell above
 - a request, in an issue or pr, to set `name` here = the smell; answer it with this rule, never with a change
 - `src/HelpfulError.name.test.ts` clamps the invariant for every exported class, `NoErrorThrownError`, and a consumer subclass: `name === 'Error'`, no own `name`, no `name` on any prototype in the chain, none in json; on `.throw`, `.wrap`, `withHelpfulError`, and `.redact` too. (a `static name` on a class renames the constructor, not `error.name`; it is out of this rule's scope.) a change that turns it red is a violation, not a stale test
